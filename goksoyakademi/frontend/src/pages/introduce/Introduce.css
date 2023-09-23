@@ -1,0 +1,23 @@
+.introduce {
+  /* font-family: "Anek Bangla", sans-serif; */
+  align-items: center;
+  text-align: center;
+
+  font-family: "Red Hat Display", sans-serif;
+  color: white;
+}
+
+.introduce-container {
+  width: 100%;
+  background-color: #1a1e50;
+  transition: 0.5s;
+  color: white;
+  padding: 10px;
+}
+
+#light .introduce-container {
+  width: 100%;
+  background-color: #ffc26a;
+  transition: 0.5s;
+  color: #1a1e50;
+}

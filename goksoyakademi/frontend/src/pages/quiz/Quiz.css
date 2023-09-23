@@ -1,0 +1,152 @@
+.quiz {
+  /* min-width: 60vh;
+  max-width: 60vh; */
+
+  /* font-family: "Anek Bangla", sans-serif; */
+  font-family: "Red Hat Display", sans-serif;
+  justify-content: center;
+  align-items: center;
+}
+
+.extraspace {
+  height: 95px;
+}
+
+.quiz-container {
+  background-color: #1a1e50;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  /* min-height: 50vh; */
+  color: white;
+  transition: 1s;
+}
+
+#light .quiz-container {
+  width: 100%;
+  background-color: #ffc26a;
+  color: #1a1e50;
+  /* padding: 20px 0px 10px 0px; */
+}
+.default-container {
+  background-color: #1a1e50;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  color: white;
+  transition: 1s;
+}
+
+#light .default-container {
+  width: 100%;
+  background-color: #ffc26a;
+  color: #1a1e50;
+  /* padding: 20px 0px 10px 0px; */
+}
+
+.disabled-button {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* .h-320 {
+  min-height: 320px !important;
+} */
+
+.choice {
+  /* min-width: 50vh; */
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+  /* background-color: #5667ff; */
+  background-color: transparent;
+  /* border: solid 1px black; */
+  /* background-color: rgba(0, 0, 0, 0.6); */
+  cursor: pointer;
+  /* border-radius: 30px; */
+  /* color: rgb(255, 255, 255); */
+  color: rgb(0, 0, 0);
+  box-shadow: 0px 0px 1px rgb(0, 0, 0);
+}
+
+#dark .choice {
+  border: solid 1px white;
+  background-color: #00000000;
+  /* background: #ff7b00; */
+}
+
+#dark .choice:hover {
+  background-color: #00000062;
+}
+
+.choice:hover {
+  /* background-color: #4c58ff; */
+  background-color: #a4aaff;
+}
+
+.nextButton {
+  left: 0%;
+}
+
+.question-nav {
+  cursor: pointer;
+  border: solid 1px black;
+  border-radius: 10px;
+  padding: 3px;
+}
+#dark .question-nav {
+  cursor: pointer;
+  border: solid 1px rgb(255, 255, 255);
+  border-radius: 10px;
+  padding: 3px;
+}
+#dark .question-nav:hover {
+  border: solid 1px rgb(95, 95, 95);
+}
+.question-nav:hover {
+  color: rgb(95, 95, 95);
+  cursor: pointer;
+  border: solid 1px rgb(95, 95, 95);
+  border-radius: 10px;
+  padding: 3px;
+}
+
+#light .true-button {
+  border: solid 1px rgb(58, 201, 58);
+  /* background-color: rgb(58, 201, 58); */
+  pointer-events: none;
+  font-weight: 700;
+}
+#dark .true-button {
+  border: solid 1px rgb(58, 201, 58);
+}
+
+#light .false-button {
+  border: solid 1px rgb(201, 58, 58);
+  pointer-events: none;
+}
+#dark .false-button {
+  border: solid 1px rgb(201, 58, 58);
+
+}
+
+.disabled-choice {
+  border: solid 1px rgb(90, 90, 90);
+  color: gray;
+  pointer-events: none;
+}
+
+#light .disabled-choice {
+  border: solid 0px rgb(90, 90, 90);
+  /* color: rgb(255, 255, 255); */
+  pointer-events: none;
+}
+
+.highlighted-choice {
+  font-weight: 700;
+  border: solid 1px rgb(255, 255, 255) !important;
+  /* color: white; */
+  pointer-events: none;
+}

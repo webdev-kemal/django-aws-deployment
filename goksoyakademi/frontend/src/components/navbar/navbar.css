@@ -1,0 +1,84 @@
+.custom-navbar {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 95%; /* Adjust the value as needed */
+  font-family: "Red Hat Display", sans-serif;
+  font-weight: 400;
+  font-size: large;
+}
+
+#light .navbar-bg {
+  /* background-color: rgb(255, 196, 157); */
+  /*OLD ORANGE SCHEME*/
+  /* background-color: #ffc26a; */
+  background-color: #f4f9f9;
+  transition: 0.5s;
+}
+#dark .navbar-bg {
+  /* background-color: #343dc0; */
+  background-color: #131746;
+  transition: 0.5s;
+}
+
+#light .badge-color {
+  color: white !important;
+  background-color: #131746 !important;
+}
+
+.navbar-brand {
+  color: #ffc26a;
+
+  font-family: "Red Hat Display", sans-serif;
+  font-weight: 800;
+  font-size: x-large;
+}
+#light .navbar-brand {
+  /* color: #343dc0; */
+  color: #ff6347;
+}
+
+.spans {
+  color: rgb(255, 255, 255);
+}
+
+
+.navbar-text{
+
+  display: inline-block;
+}
+
+
+#light .spans {
+  color: #ffffff;
+}
+
+#light a {
+  color: #000000;
+}
+
+.nav-link {
+  color: #000000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+/* navlinks */
+
+.navlink-hover {
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 30px;
+  cursor: pointer;
+}
+.navlink-hover:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 30px;
+  cursor: pointer;
+}
+/* .navlink-hover:hover {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 30px;
+  transition: 0.5s;
+} */
+#dark .navlink-hover:hover {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}

@@ -1,0 +1,80 @@
+body {
+  /* width: 100%; */
+  margin: 0px;
+  padding: 0px;
+  /* height: 100vh; */
+  font-family: "Red Hat Display", sans-serif;
+  /* background-color: #ffdba9; */
+  background-color: #323ab7;
+}
+
+.mh-100vh {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#dark {
+  background-color: #343dc0;
+  /* background-image: linear-gradient(to right, #131746, #12195f); */
+
+  transition: 0.5s;
+}
+#light {
+  /*OLD ORANGE SCHEME*/
+  /* background-color: #ffdba9; */
+  background-color: #f1f6f9;
+  /* background-image: linear-gradient(to right, #f5ece5, #f5ece5); */
+  transition: 0.5s;
+}
+
+.floatingLoginIntro {
+  position: absolute;
+  left: 80px;
+  top: 140px;
+}
+
+.relative {
+  position: relative !important;
+}
+
+.inner-shadow {
+  position: relative;
+  width: 100%;
+  height: 50%;
+}
+
+.inner-shadow::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%; /* You can adjust this value to change how tall the shadow is */
+  box-shadow: inset 0px 15px 10px -10px rgba(0, 0, 0, 0.5); /* Adjust the shadow values as needed */
+  pointer-events: none; /* Ensure the pseudo-element doesn't interfere with any interactions */
+}
+
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+    /* color: rgb(185, 185, 185); */
+  }
+}
+
+.translateXY {
+  transform: translate(-50%, -50%);
+  animation: spin 0.6s linear infinite !important;
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translate(-50%, 100%);
+  }
+  100% {
+    transform: translate(-50%, 0%);
+  }
+}

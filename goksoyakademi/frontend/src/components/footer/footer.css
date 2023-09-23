@@ -1,0 +1,25 @@
+.custom-footer {
+  padding: 20px;
+  margin-top: auto;
+}
+
+#light .custom-footer {
+  /* background-color: rgb(255, 196, 157); */
+  /*OLD ORANGE SCHEME*/
+  /* background-color: #ffc26a; */
+  background-color: #f4f9f9;
+  color: #262629;
+  font-weight: bold;
+  transition: 0.5s;
+}
+#dark .custom-footer {
+  /* background-color: #343dc0; */
+  background-color: #131746;
+  color: #c3c3d3;
+  transition: 0.5s;
+  font-weight: bold;
+}
+
+.custom-footer-container {
+  padding-left: 15vh;
+}
