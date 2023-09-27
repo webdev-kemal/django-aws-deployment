@@ -3,7 +3,7 @@ import Switch from "./Switch";
 import "./navbar.css";
 import { useNavigate } from "react-router-dom";
 // import { Link } from "react-router-dom";
-import { useMediaQuery, Text, Button } from "@chakra-ui/react";
+import { useMediaQuery, Text, Button, Flex } from "@chakra-ui/react";
 import {
   MdShoppingCart,
   MdPerson2,
@@ -71,7 +71,7 @@ const Navbar = () => {
               // display="inline-block" // this is the line to add
             >
               {/* <span class="spans">&#123;</span> */}
-              &nbsp;Yoğurt Akademi&nbsp;
+              &nbsp;Göksoy Akademi&nbsp;
               {/* <span class="spans">&#125;</span> */}
             </Text>
             <button
@@ -97,9 +97,7 @@ const Navbar = () => {
                     Ana Sayfa
                   </a>
                 </li>
-                <li 
-                className="nav-item me-4"
-                >
+                <li className="nav-item me-4">
                   <a
                     class="nav-link navlink-hover"
                     onClick={() => navigate("/courses")}
@@ -177,7 +175,13 @@ const Navbar = () => {
                         >
                           Profil
                         </MenuItem>
-                        <MenuItem>Ayarlar</MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            navigate("/protected");
+                          }}
+                        >
+                          Öğretmen
+                        </MenuItem>
                         <MenuItem onClick={handleLogout}>Çıkış Yap</MenuItem>
                       </MenuList>
                     </Menu>

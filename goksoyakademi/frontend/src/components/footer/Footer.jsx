@@ -16,7 +16,7 @@ const Footer = () => {
           m={0}
         >
           {/* <span class="spans">&#123;</span> */}
-          &nbsp;Yoğurt Akademi&nbsp;
+          &nbsp;Göksoybal Akademi&nbsp;
           {/* <span class="spans">&#125;</span> */}
         </Text>
         {/* <div className="row">

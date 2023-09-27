@@ -26,7 +26,7 @@ import {
 
 const socials = [
   {
-    name: "Yoğurt Akademi",
+    name: "Göksoy Akademi",
     url: "lmfao",
   },
 ];
@@ -90,7 +90,7 @@ const Mobile = ({ handleClick }) => {
           // display="flex" // this is the line to add
         >
           {/* <span class="spans">&#123;</span> */}
-          &nbsp;Yoğurt Akademi&nbsp;
+          &nbsp;Göksoy Akademi&nbsp;
           {/* <span class="spans">&#125;</span> */}
         </Text>
       </Box>

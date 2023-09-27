@@ -24,6 +24,8 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Provider } from "react-redux";
 import configureStore from "./store/configureStore";
 
+import ProtectedRoute from "./hocs/ProtectedRoute";
+
 // import { ChakraProvider } from "@chakra-ui/react";
 const store = configureStore();
 // import QuestionSolutionPage from "./components/Questions/QuestionSolutionPage";
@@ -33,35 +35,36 @@ function App() {
   return (
     <div id={theme}>
       <ChakraProvider>
-      <Provider store={store}>
- 
-      {/* <Banner /> */}
+        <Provider store={store}>
+          {/* <Banner /> */}
 
-        <Router>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route exact path="/quiz" element={<Introduce />} />
-            <Route exact path="/login" element={<Login />} />
-            <Route exact path="/register" element={<Login />} />
-            <Route exact path="/quiz/:collection" element={<Quiz />} />
-            <Route exact path="/dashboard" element={<Dashboard />} />
-            <Route exact path="/courses" element={<Main />} />
-            <Route exact path="/video/:id" element={<VideoPage />} />
-            <Route exact path="/course/:id" element={<Course />} />
-            <Route path="/cart/:id?" element={<Cart />} />
-            <Route path="/cart/:id" element={<Cart />} />
-            <Route path="/profile" element={<Profile />} />
-            {/* <Route
+          <Router>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route exact path="/quiz" element={<Introduce />} />
+              <Route exact path="/login" element={<Login />} />
+              <Route exact path="/register" element={<Login />} />
+              <Route exact path="/quiz/:collection" element={<Quiz />} />
+              <Route exact path="/dashboard" element={<Dashboard />} />
+              <Route exact path="/courses" element={<Main />} />
+              <Route exact path="/video/:id" element={<VideoPage />} />
+              <Route exact path="/course/:id" element={<Course />} />
+              <Route path="/cart/:id?" element={<Cart />} />
+              <Route path="/cart/:id" element={<Cart />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/protected" element={<ProtectedRoute />}>
+                <Route index element={<Dashboard />} />
+              </Route>
+              {/* <Route
               exact
               path="/question/:id"
               element={<QuestionSolutionPage />}
             /> */}
-          </Routes>
-        </Router>
- 
+            </Routes>
+          </Router>
 
-      <Alert />
-    </Provider>
+          <Alert />
+        </Provider>
       </ChakraProvider>
     </div>
   );

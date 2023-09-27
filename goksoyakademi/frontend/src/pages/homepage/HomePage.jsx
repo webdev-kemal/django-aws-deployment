@@ -22,6 +22,20 @@ import {
 import { FaPlay } from "react-icons/fa";
 import ImageCard from "../../components/cards/imageCard";
 import Footer from "../../components/footer/Footer";
+import axios from "axios";
+
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response.status === 401) {
+      // or whatever status code your backend sends when the token is expired
+      dispatch(logout()); // dispatch logout action when a response returns unauthorized
+    }
+    return Promise.reject(error);
+  }
+);
 
 const HomePage = () => {
   const [isLargerThanMobile] = useMediaQuery("(min-width: 768px)");

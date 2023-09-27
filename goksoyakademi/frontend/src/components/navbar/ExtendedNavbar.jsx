@@ -32,16 +32,16 @@ const ExtendedNavbar = () => {
                 aria-current="page"
                 href="/"
               >
-                Exit Dashboard
+                Öğretmen Modundan Çık
                 <span class="badge bg-success ms-1 p-1">Saved!</span>
               </a>
             </li>
-
+            {/* 
             <li class="nav-item me-5">
               <a class="nav-link navlink-hover" href="/login">
                 Log out
               </a>
-            </li>
+            </li> */}
             {isLargerThanMobile ? (
               <li class="nav-item">
                 <a class="nav-link" href="#">

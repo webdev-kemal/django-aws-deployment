@@ -288,14 +288,16 @@ const Main = () => {
                   authorProfile="https://picsum.photos/1920/1080"
                   courseDescription="lmfwqdwqd qweqwe dqw q w ao"
                 /> */}
-                <CourseCard
-                  courseId="121"
-                  courseTitle="Plus Üyelik"
-                  // courseImage="teacher1.jpg"
-                  authorName="Yoğurt Akademi"
-                  authorProfile="https://picsum.photos/1920/1080"
-                  courseDescription="Tüm kurslara ve quizlere erişim sağlayın!"
-                />
+                {!loading && (
+                  <CourseCard
+                    courseId="121"
+                    courseTitle="Plus Üyelik"
+                    // courseImage="teacher1.jpg"
+                    authorName="Göksoy Akademi"
+                    authorProfile="https://picsum.photos/1920/1080"
+                    courseDescription="Tüm kurslara ve quizlere erişim sağlayın!"
+                  />
+                )}
                 {/* <ImageCard
                   videoTitle="Past Tense"
                   videoImage="url('teacher1.jpg')"

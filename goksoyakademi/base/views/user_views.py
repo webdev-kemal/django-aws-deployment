@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 from base.serializer import UserSerializer, UserSerializerWithToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import TokenError, AccessToken
 
 from base.models import User
 
@@ -95,3 +96,34 @@ def registerUser(request):
             'details' : 'Username veya Email kullanılıyor' 
         }
         return Response(message, status= status.HTTP_400_BAD_REQUEST)
+
+    #jwt validation
+@api_view(['POST'])
+def verify_token(request):
+    token = request.data.get('token')
+    
+    if not token:
+        return Response({"valid": False}, status=400)
+        
+    try:
+        AccessToken(token)
+        return Response({"valid": True})
+    except TokenError:
+        return Response({"valid": False}, status=401)
+    
+# @api_view(['GET'])
+# def some_protected_view(request):
+#     if not request.user.userprofile.isTeacher:
+#         return Response({"error": "Not allowed!"}, status=403)
+    
+# @api_view(['GET'])
+# def check_is_teacher(request):
+#     return Response({"isTeacher": request.user.userprofile.isTeacher})
+
+@api_view(['GET'])
+def check_is_teacher(request):
+    # Assuming you want to allow even unauthenticated users to check
+    # their teacher status. If the user isn't authenticated, return False.
+    if not request.user.is_authenticated:
+        return Response({"isTeacher": False})
+    return Response({"isTeacher": request.user.userprofile.isTeacher})

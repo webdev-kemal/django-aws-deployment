@@ -1,4 +1,4 @@
-import React , {useState} from "react";
+import React, { useState } from "react";
 import LoginForm from "../../components/forms/LoginForm";
 import RegisterForm from "../../components/forms/RegisterForm";
 import {
@@ -14,12 +14,11 @@ const Login = () => {
   const [isLargerThan1280] = useMediaQuery("(min-width: 1280px)");
   const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
 
-  const [hasAccount, setHasAccount] = useState(true)
-  
+  const [hasAccount, setHasAccount] = useState(true);
+
   const toggleHasAccount = () => {
-    setHasAccount(!hasAccount)
-  }
-  
+    setHasAccount(!hasAccount);
+  };
 
   return (
     <div className="mh-100vh">
@@ -52,7 +51,7 @@ const Login = () => {
                 fontFamily="Red Hat Display"
               >
                 {/* <span class="spans">&#123;</span> */}
-                &nbsp;Yoğurt Akademi&nbsp;
+                &nbsp;Göksoy Akademi&nbsp;
                 {/* <span class="spans">&#125;</span> */}
               </Text>
             )}
@@ -62,7 +61,11 @@ const Login = () => {
           colSpan={{ base: 10, md: 7, lg: 6, xl: 4 }}
           background="white"
         >
-         {hasAccount ? <LoginForm toggleHasAccount={toggleHasAccount}/> : <RegisterForm toggleHasAccount={toggleHasAccount}/>}
+          {hasAccount ? (
+            <LoginForm toggleHasAccount={toggleHasAccount} />
+          ) : (
+            <RegisterForm toggleHasAccount={toggleHasAccount} />
+          )}
         </GridItem>
       </Grid>
     </div>
