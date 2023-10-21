@@ -76,7 +76,7 @@ def getUsers(request):
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
-@csrf_exempt
+# @csrf_exempt
 @api_view(['POST'])
 def registerUser(request):
     print(request.data)
@@ -93,7 +93,8 @@ def registerUser(request):
     except Exception as e:
         # print(e)
         message = {
-            'details' : 'Username veya Email kullanılıyor' 
+            # 'details' : 'Username veya Email kullanılıyor' 
+            'details' : str(e)
         }
         return Response(message, status= status.HTTP_400_BAD_REQUEST)
 

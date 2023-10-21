@@ -23,22 +23,38 @@ import { FaPlay } from "react-icons/fa";
 import ImageCard from "../../components/cards/imageCard";
 import Footer from "../../components/footer/Footer";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { logout } from "../../actions/user";
 
-axios.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (error.response.status === 401) {
-      // or whatever status code your backend sends when the token is expired
-      dispatch(logout()); // dispatch logout action when a response returns unauthorized
-    }
-    return Promise.reject(error);
-  }
-);
+// axios.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   (error) => {
+//     if (error.response.status === 401) {
+//       // or whatever status code your backend sends when the token is expired
+//       dispatch(logout()); // dispatch logout action when a response returns unauthorized
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 const HomePage = () => {
   const [isLargerThanMobile] = useMediaQuery("(min-width: 768px)");
+
+  const dispatch = useDispatch();
+
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error.response.status === 401) {
+        dispatch(logout()); // Now dispatch should be defined
+      }
+      return Promise.reject(error);
+    }
+  );
 
   return (
     <div>

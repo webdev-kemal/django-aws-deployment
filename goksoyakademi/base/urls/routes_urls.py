@@ -5,6 +5,6 @@ from base.views import demo_views as demoviews
 
 urlpatterns = [
     path('', views.getRoutes , name="routes"),
-    path('/demo', demoviews.demoform , name="routes"),
+    path('demo/', demoviews.demoform , name="routes"),
     
 ]

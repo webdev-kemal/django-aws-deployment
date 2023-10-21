@@ -13,6 +13,7 @@ import {
   Heading,
   Flex,
   useMediaQuery,
+  Badge,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -26,78 +27,72 @@ import {
 } from "react-icons/bs";
 import { useTheme } from "../../context/ThemeContext";
 import CourseCard from "../../components/cards/courseCard";
+import AddCourse from "../../components/addcourse/AddCourse";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const userLogin = useSelector((state) => state.user);
   const { userInfo } = userLogin;
   const { theme } = useTheme();
 
-  //   const config = {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${userInfo.token}`,
-  //     },
-  //   };
-
-  //   try {
-  //     const response = await axios.get(
-  //       "http://127.0.0.1:8000/api/user/verify/teacher",
-  //       config
-  //     );
-  //     return response.data.isTeacher;
-  //   } catch (error) {
-  //     console.error("Error verifying isTeacher status:", error);
-  //     return false;
-  //   }
-  // };
-
-  // const checkIsTeacher = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       "http://127.0.0.1:8000/api/user/verify/teacher"
-  //     );
-  //     return response.data.isTeacher;
-  //   } catch (error) {
-  //     console.error("Error verifying isTeacher status:", error);
-  //     return false;
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const fetchIsTeacher = async () => {
-  //     const result = await checkIsTeacher();
-  //     console.log(`is teacher : ${result}`);
-  //   };
-
-  //   fetchIsTeacher();
-  // }, [userInfo]);
+  const navigate = useNavigate();
 
   const MyCourses = () => {
+    const [courses, setCourses] = useState([]);
+
+    useEffect(() => {
+      // Load courses from localStorage when component mounts
+      const savedCourses = localStorage.getItem("courses");
+      if (savedCourses) {
+        setCourses(JSON.parse(savedCourses));
+      }
+    }, []);
+
     return (
       <Grid
         templateColumns={{
-          base: "repeat(1, 1fr)",
+          base: "repeat(2, 1fr)",
           // lg: "repeat(2, 1fr)",
           // xl: "repeat(3, 1fr)",
           // "2xl": "repeat(4, 1fr)",
         }}
-        rowGap={"50px"}
-        columnGap={"150px"}
+        rowGap={"10px"}
+        columnGap={"70px"}
       >
-        <CourseCard
-          courseId="121"
-          courseTitle="Plus Üyelik"
-          // courseImage="teacher1.jpg"
-          authorName="Göksoy Akademi"
-          authorProfile="https://picsum.photos/1920/1080"
-          courseDescription="Tüm kurslara ve quizlere erişim sağlayın!"
-        />
+        {courses.map((course, index) => (
+          <Box
+            key={course.id}
+            borderWidth="1px"
+            borderRadius="lg"
+            overflow="hidden"
+            p={4}
+            _hover={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate(`/${course.id}`);
+            }}
+          >
+            <Heading fontSize="xl">{course.courseName}</Heading>
+            <Text mt={2}>{course.desc}</Text>
+            <Badge mt={2} colorScheme="teal">
+              {course.parts.length}{" "}
+              {course.parts.length === 1 ? "Part" : "Parts"}
+            </Badge>
+          </Box>
+        ))}
+        <Button
+          variation="outline"
+          onClick={() => {
+            localStorage.removeItem("courses");
+          }}
+        >
+          Delete Courses
+        </Button>
       </Grid>
     );
   };
 
   useEffect(() => {
-    console.log(userInfo.isTeacher);
+    // console.log(userInfo.isTeacher);
   }, []);
 
   // Table function
@@ -112,7 +107,12 @@ const Dashboard = () => {
           </Box>
         );
       case "dash2":
-        return <Box>Dashboard 2 Content</Box>;
+        return (
+          <Box>
+            <AddCourse />
+          </Box>
+        );
+
       case "dash3":
         return <Box>Dashboard 3 Content</Box>;
       case "dash4":

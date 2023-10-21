@@ -1,4 +1,4 @@
-import React, { useEffect , useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import "./loginform.css";
 import { loginSchema } from "../../schemas";
@@ -8,35 +8,31 @@ import { useTheme } from "../../context/ThemeContext";
 import { Text, Button, Box } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 
-import {login} from '../../actions/user'
-import {useDispatch, useSelector} from 'react-redux'
-import {useLocation, useNavigate, useParams, Link} from 'react-router-dom'
+import { login } from "../../actions/user";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate, useParams, Link } from "react-router-dom";
 
-const LoginForm = ({toggleHasAccount}) => {
+const LoginForm = ({ toggleHasAccount }) => {
   const { isLoading, response, submit } = useSubmit();
   const { onOpen } = useAlertContext();
   const { theme } = useTheme();
 
-  const dispatch = useDispatch()
-  const history = useNavigate()
+  const dispatch = useDispatch();
+  const history = useNavigate();
 
-  const location = useLocation()
-  const redirect = location.search ? location.search.split('=')[1] : '/'
+  const location = useLocation();
+  const redirect = location.search ? location.search.split("=")[1] : "/";
 
-  const userLogin = useSelector(state=> state.user)
-  const {loading, error, userInfo} = userLogin
+  const userLogin = useSelector((state) => state.user);
+  const { loading, error, userInfo } = userLogin;
 
-  useEffect(()=>{
-
-    if(userInfo){
-      console.log("lmfao")
-      console.log(userInfo)
-      history(redirect)
+  useEffect(() => {
+    if (userInfo) {
+      console.log("lmfao");
+      console.log(userInfo);
+      history(redirect);
     }
-
-  }, [history, userInfo, redirect])
-
-
+  }, [history, userInfo, redirect]);
 
   const onSubmitDemo = (values) => {
     // await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -62,8 +58,7 @@ const LoginForm = ({toggleHasAccount}) => {
     onSubmit: (values, actions) => {
       // submit("/api/submit", values);
       // actions.resetForm();
-      dispatch(login(values.email, values.password))
-    
+      dispatch(login(values.email, values.password));
     },
   });
 
@@ -73,20 +68,22 @@ const LoginForm = ({toggleHasAccount}) => {
       onOpen(response.type, response.message);
     }
   }, [response]);
-  
+
   useEffect(() => {
     if (error) {
       //calling onOpen for the only time here
-      onOpen('response.type', error);
+      onOpen("error", error); // Changed 'response.type' to 'error'
     }
   }, [error]);
 
   const handleHasNoAcc = () => {
-
-    toggleHasAccount(); 
-    if(redirect){history(`/register?redirect=${redirect}`)}else{history(`/register`)}
-
-  }
+    toggleHasAccount();
+    if (redirect) {
+      history(`/register?redirect=${redirect}`);
+    } else {
+      history(`/register`);
+    }
+  };
 
   return (
     <div className="basicform mb-3">
@@ -102,9 +99,8 @@ const LoginForm = ({toggleHasAccount}) => {
             Giriş yap
           </Text>
           <Text fontSize="2xl" color="red" mb={2}>
-            {error }
+            {error}
           </Text>
-
 
           <div className="Field">
             <label htmlFor="email ">
@@ -151,7 +147,14 @@ const LoginForm = ({toggleHasAccount}) => {
           >
             GİRİŞ YAP
           </button>
-          <Text mt={3} cursor="pointer" textDecoration="underline" onClick={handleHasNoAcc}>Hesabınız yok mu?</Text>
+          <Text
+            mt={3}
+            cursor="pointer"
+            textDecoration="underline"
+            onClick={handleHasNoAcc}
+          >
+            Hesabınız yok mu?
+          </Text>
         </fieldset>
       </form>
     </div>

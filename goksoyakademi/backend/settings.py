@@ -107,6 +107,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -193,12 +194,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1',
-       'http://localhost:3000',
-       'http://localhost:3001',
-       'http://127.0.0.1:8000',
-       'http://127.0.0.1:80',
-       'http://0.0.0.0:8000',
-
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1:80',
+    'http://0.0.0.0:8000',
+    'https://goksoydil.com',
 
 )
 
@@ -241,3 +242,4 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+CSRF_TRUSTED_ORIGINS=['https://goksoydil.com', 'https://localhost']

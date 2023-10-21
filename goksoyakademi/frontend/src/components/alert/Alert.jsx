@@ -14,7 +14,7 @@ import React, { useRef } from "react";
  */
 function Alert() {
   const componentRef = useRef();
-  const { isOpen, type, message, onClose } = useAlertContext();
+  const { isOpen, type, message, onClose, handleConfirm } = useAlertContext();
   const cancelRef = useRef();
   const isSuccess = type === "success";
 
@@ -25,23 +25,20 @@ function Alert() {
       onClose={onClose}
     >
       <AlertDialogOverlay>
-        <AlertDialogContent
-        // py={4}
-        // backgroundColor={isSuccess ? "#81C784" : "#FF8A65"}
-        >
+        <AlertDialogContent>
           <AlertDialogHeader fontSize="2xl" fontWeight="bold">
             {isSuccess ? "Başarılı!" : "Bir sorun oluştu!"}
           </AlertDialogHeader>
           <AlertDialogBody>{message}</AlertDialogBody>
           <AlertDialogFooter>
-            <Button 
-            // as="a" href="/login" 
-            ref={cancelRef} onClick={onClose}>
-              Devam et
+            <Button ref={cancelRef} onClick={onClose}>
+              Cancel
             </Button>
-            {/* <Button colorScheme="red" onClick={onClose} ml={3}>
-              Delete
-            </Button> */}
+            {type === "warning" && (
+              <Button colorScheme="red" onClick={handleConfirm} ml={3}>
+                Kursu Sil
+              </Button>
+            )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogOverlay>
