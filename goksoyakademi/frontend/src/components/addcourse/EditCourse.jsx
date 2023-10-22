@@ -97,32 +97,11 @@ const EditCourse = () => {
   //   loadCourses();
   // };
 
-  // const saveToLocalStorage = () => {
-  //   const courseData = { id, courseName, desc, prc, parts };
-  //   // Get current courses data from localStorage
-  //   const currentData = localStorage.getItem("courses");
-  //   // Parse current data, or use an empty array if there's no data
-  //   const courses = currentData ? JSON.parse(currentData) : [];
-  //   // Append new course data to the array
-  //   courses.push(courseData);
-  //   // Save updated courses data back to localStorage
-  //   localStorage.setItem("courses", JSON.stringify(courses));
-  //   // loadCourses();
-  // };
-
   const saveToLocalStorage = () => {
     const courseData = { id, courseName, desc, prc, parts };
-
-    // Get current courses data from localStorage
     const currentData = localStorage.getItem("courses");
-
-    // Parse current data, or use an empty array if there's no data
     const courses = currentData ? JSON.parse(currentData) : [];
-
-    // Convert id to number (or you can convert course.id to string, depending on your requirement)
     const courseId = Number(id);
-
-    // Check if a course with the given ID already exists
     const courseIndex = courses.findIndex((course) => course.id === courseId);
 
     if (courseIndex !== -1) {
@@ -133,7 +112,6 @@ const EditCourse = () => {
       courses.push(courseData);
     }
 
-    // Save updated courses data back to localStorage
     localStorage.setItem("courses", JSON.stringify(courses));
     // loadCourses(); (if you have such a function)
   };
@@ -153,11 +131,6 @@ const EditCourse = () => {
     setParts([...parts, initialPart()]);
   };
 
-  // const addVideo = (partIndex) => {
-  //   const newParts = [...parts];
-  //   newParts[partIndex].videos.push(initialVideo);
-  //   setParts(newParts);
-  // };
   const addVideo = (partIndex) => {
     const newParts = [...parts];
     // Create a new initialVideo object each time you add a new video

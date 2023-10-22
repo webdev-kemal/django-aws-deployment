@@ -26,6 +26,7 @@ import { useToast } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useAlertContext } from "../../context/AlertContext";
 import { EditIcon, CheckIcon } from "@chakra-ui/icons";
+import { v4 as uuidv4 } from "uuid";
 
 const initialVideo = { title: "", videoFile: "" };
 
@@ -59,12 +60,13 @@ const AddCourse = () => {
   }, [isEditingPartName]);
 
   const automateID = () => {
-    const savedData = localStorage.getItem("courses");
-    if (savedData) {
-      setID([...savedData].length + 1);
-    } else {
-      setID(0);
-    }
+    // const savedData = localStorage.getItem("courses");
+    // if (savedData) {
+    //   setID([...savedData].length + 1);
+    // } else {
+    //   setID(0);
+    // }
+    setID(uuidv4());
   };
 
   useEffect(() => {
@@ -248,8 +250,8 @@ const AddCourse = () => {
         <Button
           me={3}
           onClick={() => {
-            saveToLocalStorage();
             handleSaveDraft();
+            saveToLocalStorage();
           }}
           colorScheme="yellow"
         >
@@ -257,8 +259,8 @@ const AddCourse = () => {
         </Button>
         <Button
           onClick={() => {
-            saveToLocalStorage();
             handlePublish();
+            saveToLocalStorage();
           }}
           colorScheme="green"
         >

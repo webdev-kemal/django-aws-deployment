@@ -15,6 +15,10 @@ import {
   Flex,
   useMediaQuery,
   Badge,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 import axios from "axios";
@@ -99,17 +103,37 @@ const Dashboard = () => {
                 {course.parts.length}{" "}
                 {course.parts.length === 1 ? "ÜNİTE" : "ÜNİTE"}
               </Badge>
-              <IconButton
+              {/* <IconButton
                 pos={"absolute"}
                 right={"10px"}
                 top={"10px"}
-                // colorScheme="blue"
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
                 aria-label="Settings"
                 icon={<SettingsIcon />}
-              />
+              /> */}
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  pos={"absolute"}
+                  right={"10px"}
+                  top={"10px"}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  aria-label="Settings"
+                  icon={<SettingsIcon />}
+                />
+                <MenuList>
+                  <MenuItem onClick={() => handleEditCourse(course.id)}>
+                    Edit Course
+                  </MenuItem>
+                  <MenuItem onClick={() => handleRemoveCourse(course.id)}>
+                    Remove Course
+                  </MenuItem>
+                </MenuList>
+              </Menu>
               {course.isDraft ? (
                 <Text
                   pos={"absolute"}
