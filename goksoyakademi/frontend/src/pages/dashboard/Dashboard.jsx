@@ -7,6 +7,7 @@ import {
   Box,
   Grid,
   GridItem,
+  IconButton,
   VStack,
   Button,
   Text,
@@ -15,6 +16,7 @@ import {
   useMediaQuery,
   Badge,
 } from "@chakra-ui/react";
+import { SettingsIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import {
@@ -28,7 +30,9 @@ import {
 import { useTheme } from "../../context/ThemeContext";
 import CourseCard from "../../components/cards/courseCard";
 import AddCourse from "../../components/addcourse/AddCourse";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import EditCourse from "../../components/addcourse/EditCourse";
+import { useAlertContext } from "../../context/AlertContext";
 
 const Dashboard = () => {
   const userLogin = useSelector((state) => state.user);
@@ -36,6 +40,9 @@ const Dashboard = () => {
   const { theme } = useTheme();
 
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const { onOpen } = useAlertContext();
 
   const MyCourses = () => {
     const [courses, setCourses] = useState([]);
@@ -44,68 +51,123 @@ const Dashboard = () => {
       // Load courses from localStorage when component mounts
       const savedCourses = localStorage.getItem("courses");
       if (savedCourses) {
+        console.log(`${savedCourses} ve sayısı toplam ${savedCourses.length}`);
         setCourses(JSON.parse(savedCourses));
       }
     }, []);
 
     return (
-      <Grid
-        templateColumns={{
-          base: "repeat(2, 1fr)",
-          // lg: "repeat(2, 1fr)",
-          // xl: "repeat(3, 1fr)",
-          // "2xl": "repeat(4, 1fr)",
-        }}
-        rowGap={"10px"}
-        columnGap={"70px"}
-      >
-        {courses.map((course, index) => (
-          <Box
-            key={course.id}
-            borderWidth="1px"
-            borderRadius="lg"
-            overflow="hidden"
-            p={4}
-            _hover={{ cursor: "pointer" }}
+      <>
+        <Heading fontSize="xl" w="100%" mb={3}>
+          {courses.length >= 1
+            ? `${courses.length} adet kursunuzdan${" "}
+          ${courses.filter((course) => course.isDraft === true).length} tanesi
+          taslak modda.`
+            : "Hiç kursunuz yok. Kurs oluşturmak için aşağıdaki butona basın."}
+        </Heading>
+        <Grid
+          templateColumns={{
+            base: "repeat(2, 1fr)",
+            // lg: "repeat(2, 1fr)",
+            // xl: "repeat(3, 1fr)",
+            // "2xl": "repeat(4, 1fr)",
+          }}
+          rowGap={"15px"}
+          columnGap={"20px"}
+        >
+          {courses?.map((course, index) => (
+            <Box
+              key={course.id}
+              borderWidth="1px"
+              borderRadius="lg"
+              overflow="hidden"
+              p={4}
+              transition="0.3s"
+              _hover={{
+                cursor: "pointer",
+                transform: "scale(1.03)",
+                transition: "0.3s",
+              }}
+              onClick={() => {
+                navigate(`${course.id}`);
+              }}
+              pos={"relative"}
+            >
+              <Heading fontSize="xl">{course.courseName}</Heading>
+              <Text mt={2}>{course.desc}</Text>
+              <Badge mt={2} colorScheme="teal">
+                {course.parts.length}{" "}
+                {course.parts.length === 1 ? "ÜNİTE" : "ÜNİTE"}
+              </Badge>
+              <IconButton
+                pos={"absolute"}
+                right={"10px"}
+                top={"10px"}
+                // colorScheme="blue"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                aria-label="Settings"
+                icon={<SettingsIcon />}
+              />
+              {course.isDraft ? (
+                <Text
+                  pos={"absolute"}
+                  right={"10px"}
+                  bottom={"0px"}
+                  color="orange"
+                  fontWeight={"bold"}
+                >
+                  Taslak Kurs
+                </Text>
+              ) : (
+                <Text
+                  pos={"absolute"}
+                  right={"10px"}
+                  bottom={"0px"}
+                  color="green"
+                  fontWeight={"bold"}
+                >
+                  Yayında!
+                </Text>
+              )}
+            </Box>
+          ))}
+          <Button
+            variation="outline"
             onClick={() => {
-              navigate(`/${course.id}`);
+              setActiveDash("dash2");
             }}
           >
-            <Heading fontSize="xl">{course.courseName}</Heading>
-            <Text mt={2}>{course.desc}</Text>
-            <Badge mt={2} colorScheme="teal">
-              {course.parts.length}{" "}
-              {course.parts.length === 1 ? "Part" : "Parts"}
-            </Badge>
-          </Box>
-        ))}
-        <Button
-          variation="outline"
-          onClick={() => {
-            localStorage.removeItem("courses");
-          }}
-        >
-          Delete Courses
-        </Button>
-      </Grid>
+            Kurs Oluştur
+          </Button>
+          <Button
+            variation="outline"
+            onClick={() => {
+              localStorage.removeItem("courses");
+            }}
+          >
+            Delete Courses
+          </Button>
+        </Grid>
+      </>
     );
   };
 
   useEffect(() => {
     // console.log(userInfo.isTeacher);
+    if (id) {
+      // renderDash(2)
+    }
   }, []);
 
   // Table function
   const [activeDash, setActiveDash] = useState("dash1");
 
-  const renderDash = (dashId) => {
-    switch (dashId) {
+  const renderDash = () => {
+    switch (activeDash) {
       case "dash1":
-        return (
-          <Box>
-            <MyCourses />
-          </Box>
-        );
+        return <Box>{id ? <EditCourse /> : <MyCourses />}</Box>;
       case "dash2":
         return (
           <Box>
@@ -126,6 +188,7 @@ const Dashboard = () => {
 
   const NavLink = ({ dashId, children }) => {
     const isActive = activeDash === dashId;
+
     return (
       <Box
         as={Flex}
@@ -141,7 +204,20 @@ const Dashboard = () => {
           bg: isActive ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.1)",
           cursor: "pointer",
         }}
-        onClick={() => setActiveDash(dashId)}
+        onClick={() => {
+          if (id) {
+            onOpen(
+              "continue",
+              "Kaydedilmemiş değişiklikler olabilir, yine de devam edilsin mi?",
+              () => {
+                setActiveDash(dashId);
+                navigate("/protected");
+              }
+            );
+          } else {
+            setActiveDash(dashId);
+          }
+        }}
         color={"white"}
       >
         {children}

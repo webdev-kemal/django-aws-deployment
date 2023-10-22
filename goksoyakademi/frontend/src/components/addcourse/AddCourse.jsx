@@ -38,6 +38,8 @@ const AddCourse = () => {
   const inputRefs = useRef([]);
   const [isEditingPartName, setIsEditingPartName] = useState(null);
   const [editingPartName, setEditingPartName] = useState("");
+  const [editingDescription, setEditingDescription] = useState("");
+  const [editingCourseName, setEditingCourseName] = useState("");
   const [courseName, setCourseName] = useState("Benim kursum");
   const [desc, setDesc] = useState("Kurs açıklamasını lütfen buraya yazın");
   const [prc, setPrice] = useState(300);
@@ -59,7 +61,9 @@ const AddCourse = () => {
   const automateID = () => {
     const savedData = localStorage.getItem("courses");
     if (savedData) {
-      setID(savedData.length + 1);
+      setID([...savedData].length + 1);
+    } else {
+      setID(0);
     }
   };
 
@@ -120,6 +124,8 @@ const AddCourse = () => {
     setParts(newParts);
   };
 
+  // handle part title operations
+
   const handleTitleChange = (partIndex, newName) => {
     const newParts = [...parts];
     newParts[partIndex].name = newName;
@@ -140,7 +146,46 @@ const AddCourse = () => {
     }
   };
 
+  //handle course name operations
+
+  const handleCourseNameChange = (newName) => {
+    setCourseName(newName);
+    toast({
+      title: "Kurs başlığı kaydedildi!",
+      description: `Kurs adı "${newName}" olarak güncellendi.`,
+      status: "info",
+      duration: 2500,
+      isClosable: true,
+    });
+  };
+
+  const handleCourseNameSave = (e) => {
+    if (e.key === "Enter" || e.type === "blur") {
+      handleCourseNameChange(editingCourseName);
+    }
+  };
+
+  //handle description operations
+
+  const handleDescriptionChange = (partIndex, newName) => {
+    setDesc(newName);
+    toast({
+      title: "Kurs açıklaması kaydedildi!",
+      description: `Açıklama "${newName}" olarak güncellendi.`,
+      status: "info",
+      duration: 2500,
+      isClosable: true,
+    });
+  };
+
+  const handleDescriptionSave = (partIndex, e) => {
+    if (e.key === "Enter" || e.type === "blur") {
+      handleDescriptionChange(partIndex, editingDescription);
+    }
+  };
+
   const handlePublish = () => {
+    setIsDraft(false);
     toast({
       title: "Kurs yayınlandı.",
       description: "Kurslarım sekmesinde görebilirsiniz!",
@@ -151,10 +196,11 @@ const AddCourse = () => {
   };
 
   const handleSaveDraft = () => {
+    setIsDraft(true);
     toast({
       title: "Kurs taslak olarak kaydedildi.",
       description: "Kurslarım sekmesinden yayınlayabilirsiniz!",
-      status: "info",
+      status: "warning",
       duration: 2500,
       isClosable: true,
     });
@@ -174,20 +220,30 @@ const AddCourse = () => {
 
   const handleRemovePart = (partIndex) => {
     onOpen(
-      "warning",
+      "delete",
       "Bu üniteyi sildiğinde ünite içindeki videolar da kaybolacak, yine de silinsin mi?",
       () => removePart(partIndex)
     );
   };
 
   const handleRemoveVideo = (partIndex, videoIndex) => {
-    onOpen("warning", "Bu videoyu silmek istediğinden emin misin?", () =>
+    onOpen("delete", "Bu videoyu silmek istediğinden emin misin?", () =>
       removeVideo(partIndex, videoIndex)
     );
   };
 
   return (
     <Box>
+      <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md">
+        <Input
+          value={editingCourseName}
+          onBlur={(e) => handleCourseNameSave(e)}
+          onKeyPress={(e) => handleCourseNameSave(e)}
+          onChange={(e) => setEditingCourseName(e.target.value)}
+          size="md"
+          p={2}
+        />
+      </Box>
       <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md">
         <Button
           me={3}
@@ -251,7 +307,12 @@ const AddCourse = () => {
                     ) : (
                       <>
                         <Text
-                          _hover={{ bg: "rgba(0,0,0,0.2)" }}
+                          sx={{
+                            _hover: {
+                              bg: "rgba(0,0,0,0.2)",
+                              cursor: "text",
+                            },
+                          }}
                           p={2}
                           onClick={(e) => {
                             e.stopPropagation();

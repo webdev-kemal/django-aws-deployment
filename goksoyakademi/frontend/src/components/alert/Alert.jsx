@@ -16,7 +16,7 @@ function Alert() {
   const componentRef = useRef();
   const { isOpen, type, message, onClose, handleConfirm } = useAlertContext();
   const cancelRef = useRef();
-  const isSuccess = type === "success";
+  // const isSuccess = type === "success";
 
   return (
     <AlertDialog
@@ -27,16 +27,27 @@ function Alert() {
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="2xl" fontWeight="bold">
-            {isSuccess ? "Başarılı!" : "Bir sorun oluştu!"}
+            {type === "success"
+              ? "Başarılı!"
+              : type === "delete"
+              ? "Silme işlemi"
+              : type === "continue"
+              ? "Emin misiniz?"
+              : "Uyarı!"}
           </AlertDialogHeader>
           <AlertDialogBody>{message}</AlertDialogBody>
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
-              Cancel
+              İptal Et
             </Button>
-            {type === "warning" && (
+            {type === "delete" && (
               <Button colorScheme="red" onClick={handleConfirm} ml={3}>
-                Kursu Sil
+                İçeriği Sil
+              </Button>
+            )}
+            {type === "continue" && (
+              <Button colorScheme="blue" onClick={handleConfirm} ml={3}>
+                Devam Et
               </Button>
             )}
           </AlertDialogFooter>

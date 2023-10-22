@@ -50,6 +50,7 @@ const EditCourse = () => {
     if (isEditingPartName !== null && inputRefs.current[isEditingPartName]) {
       inputRefs.current[isEditingPartName].focus();
     }
+    console.log(id);
   }, [isEditingPartName]);
 
   const loadCourse = () => {
@@ -96,17 +97,45 @@ const EditCourse = () => {
   //   loadCourses();
   // };
 
+  // const saveToLocalStorage = () => {
+  //   const courseData = { id, courseName, desc, prc, parts };
+  //   // Get current courses data from localStorage
+  //   const currentData = localStorage.getItem("courses");
+  //   // Parse current data, or use an empty array if there's no data
+  //   const courses = currentData ? JSON.parse(currentData) : [];
+  //   // Append new course data to the array
+  //   courses.push(courseData);
+  //   // Save updated courses data back to localStorage
+  //   localStorage.setItem("courses", JSON.stringify(courses));
+  //   // loadCourses();
+  // };
+
   const saveToLocalStorage = () => {
     const courseData = { id, courseName, desc, prc, parts };
+
     // Get current courses data from localStorage
     const currentData = localStorage.getItem("courses");
+
     // Parse current data, or use an empty array if there's no data
     const courses = currentData ? JSON.parse(currentData) : [];
-    // Append new course data to the array
-    courses.push(courseData);
+
+    // Convert id to number (or you can convert course.id to string, depending on your requirement)
+    const courseId = Number(id);
+
+    // Check if a course with the given ID already exists
+    const courseIndex = courses.findIndex((course) => course.id === courseId);
+
+    if (courseIndex !== -1) {
+      // Update the existing course data
+      courses[courseIndex] = courseData;
+    } else {
+      // Append new course data to the array
+      courses.push(courseData);
+    }
+
     // Save updated courses data back to localStorage
     localStorage.setItem("courses", JSON.stringify(courses));
-    loadCourses();
+    // loadCourses(); (if you have such a function)
   };
 
   const toast = useToast();
@@ -170,7 +199,7 @@ const EditCourse = () => {
     toast({
       title: "Kurs taslak olarak kaydedildi.",
       description: "Kurslarım sekmesinden yayınlayabilirsiniz!",
-      status: "info",
+      status: "warning",
       duration: 2500,
       isClosable: true,
     });
@@ -190,14 +219,14 @@ const EditCourse = () => {
 
   const handleRemovePart = (partIndex) => {
     onOpen(
-      "warning",
+      "delete",
       "Bu üniteyi sildiğinde ünite içindeki videolar da kaybolacak, yine de silinsin mi?",
       () => removePart(partIndex)
     );
   };
 
   const handleRemoveVideo = (partIndex, videoIndex) => {
-    onOpen("warning", "Bu videoyu silmek istediğinden emin misin?", () =>
+    onOpen("delete", "Bu videoyu silmek istediğinden emin misin?", () =>
       removeVideo(partIndex, videoIndex)
     );
   };

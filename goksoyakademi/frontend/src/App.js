@@ -25,6 +25,7 @@ import { Provider } from "react-redux";
 import configureStore from "./store/configureStore";
 
 import ProtectedRoute from "./hocs/ProtectedRoute";
+import EditCourse from "./components/addcourse/EditCourse";
 
 // import { ChakraProvider } from "@chakra-ui/react";
 const store = configureStore();
@@ -53,6 +54,7 @@ function App() {
               <Route path="/cart/:id" element={<Cart />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/protected" element={<ProtectedRoute />}>
+                <Route path="/protected/:id" element={<Dashboard />} />
                 <Route index element={<Dashboard />} />
               </Route>
               {/* <Route
