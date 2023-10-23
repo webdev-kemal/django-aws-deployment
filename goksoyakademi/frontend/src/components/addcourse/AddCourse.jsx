@@ -21,6 +21,10 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Select,
+  Textarea,
+  Checkbox,
+  Stack,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { motion } from "framer-motion";
@@ -44,7 +48,7 @@ const AddCourse = () => {
   const [courseName, setCourseName] = useState("Benim kursum");
   const [desc, setDesc] = useState("Kurs açıklamasını lütfen buraya yazın");
   const [prc, setPrice] = useState(300);
-  const [isDraft, setIsDraft] = useState(true);
+  const [isDraft, setIsDraft] = useState(null);
   const [id, setID] = useState(null);
   const [tags, setTags] = useState(["sinav", "ingilizce", "ceviri"]);
   //   const [parts, setParts] = useState([initialPart]);
@@ -90,14 +94,9 @@ const AddCourse = () => {
   };
 
   //will convert to axios put
-  // const saveToLocalStorage = () => {
-  //   const courseData = { id, courseName, desc, prc, parts };
-  //   localStorage.setItem("courses", JSON.stringify([courseData])); // For simplicity, replacing any existing data
-  //   loadCourses();
-  // };
-
-  const saveToLocalStorage = () => {
-    const courseData = { id, courseName, desc, prc, parts, isDraft };
+  const saveToLocalStorage = (draftStatus) => {
+    if (isDraft===null)
+    {const courseData = { id, courseName, desc, prc, parts, isDraft: draftStatus };
     // Get current courses data from localStorage
     const currentData = localStorage.getItem("courses");
     // Parse current data, or use an empty array if there's no data
@@ -106,7 +105,11 @@ const AddCourse = () => {
     courses.push(courseData);
     // Save updated courses data back to localStorage
     localStorage.setItem("courses", JSON.stringify(courses));
-    // loadCourses();
+
+  }
+  else{
+    return;
+  }
   };
 
   const addPart = () => {
@@ -151,6 +154,8 @@ const AddCourse = () => {
   //handle course name operations
 
   const handleCourseNameChange = (newName) => {
+    if(newName !== "")
+    {
     setCourseName(newName);
     toast({
       title: "Kurs başlığı kaydedildi!",
@@ -159,6 +164,7 @@ const AddCourse = () => {
       duration: 2500,
       isClosable: true,
     });
+  }
   };
 
   const handleCourseNameSave = (e) => {
@@ -169,8 +175,10 @@ const AddCourse = () => {
 
   //handle description operations
 
-  const handleDescriptionChange = (partIndex, newName) => {
-    setDesc(newName);
+  const handleDescriptionChange = ( newName) => {
+    if(newName !== "")
+    {
+      setDesc(newName);
     toast({
       title: "Kurs açıklaması kaydedildi!",
       description: `Açıklama "${newName}" olarak güncellendi.`,
@@ -178,11 +186,12 @@ const AddCourse = () => {
       duration: 2500,
       isClosable: true,
     });
+  }
   };
 
-  const handleDescriptionSave = (partIndex, e) => {
+  const handleDescriptionSave = ( e) => {
     if (e.key === "Enter" || e.type === "blur") {
-      handleDescriptionChange(partIndex, editingDescription);
+      handleDescriptionChange(editingDescription);
     }
   };
 
@@ -200,7 +209,7 @@ const AddCourse = () => {
   const handleSaveDraft = () => {
     setIsDraft(true);
     toast({
-      title: "Kurs taslak olarak kaydedildi.",
+      title: "Kurs taslak moda alındı.",
       description: "Kurslarım sekmesinden yayınlayabilirsiniz!",
       status: "warning",
       duration: 2500,
@@ -236,37 +245,86 @@ const AddCourse = () => {
 
   return (
     <Box>
-      <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md">
-        <Input
-          value={editingCourseName}
-          onBlur={(e) => handleCourseNameSave(e)}
-          onKeyPress={(e) => handleCourseNameSave(e)}
-          onChange={(e) => setEditingCourseName(e.target.value)}
-          size="md"
-          p={2}
-        />
-      </Box>
-      <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md">
+            <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md">
         <Button
           me={3}
           onClick={() => {
             handleSaveDraft();
-            saveToLocalStorage();
+            saveToLocalStorage(true);
           }}
           colorScheme="yellow"
         >
           Taslağı Kaydet
         </Button>
         <Button
-          onClick={() => {
+          onClick={() => {  
             handlePublish();
-            saveToLocalStorage();
+            saveToLocalStorage(false);
           }}
           colorScheme="green"
         >
           Kursu Yayınla
         </Button>
       </Box>
+      <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md">
+        <Text fontWeight={"bold"} fontSize={"xl"}>Genel Bilgiler</Text >
+      <Grid templateColumns='2fr 5fr' gap={6}>
+          
+          <Text>Kurs Başlığı</Text>
+          <Text>Kurs Açıklaması</Text>
+        </Grid>
+      <Grid templateColumns='2fr 5fr' gap={6}>
+          <Input
+            value={editingCourseName} 
+            placeholder={courseName}
+            onBlur={(e) => handleCourseNameSave(e)}
+            onKeyPress={(e) => handleCourseNameSave(e)}
+            onChange={(e) => setEditingCourseName(e.target.value)}
+            size="md"
+            p={2}
+          />
+        <Input
+          value={editingDescription}
+          placeholder={desc}
+          onBlur={(e) => handleDescriptionSave(e)}
+          onKeyPress={(e) => handleDescriptionSave(e)}
+          onChange={(e) => setEditingDescription(e.target.value)}
+          size="md"
+          p={2}
+        />
+      </Grid>
+      <Grid templateColumns='2fr 4fr' gap={6} mt={2}>
+        <Select placeholder='Kurs Ücreti'>
+          <option value='250'>250 TL</option>
+          <option value='350'>350 TL</option>
+          <option value='450'>450 TL</option>
+          <option value='550'>550 TL</option>
+          <option value='650'>650 TL</option>
+          <option value='750'>750 TL</option>
+          <option value='850'>850 TL</option>
+        </Select>
+        <Stack spacing={3} direction='row'>
+          <Checkbox whiteSpace="nowrap">
+            Deneme Çözümü
+          </Checkbox >
+          <Checkbox  whiteSpace="nowrap">
+            Sınava Hazırlık
+          </Checkbox>
+          <Checkbox whiteSpace="nowrap">
+            Konu Anlatımı
+          </Checkbox>
+          <Checkbox whiteSpace="nowrap">
+            Çeviri Odaklı
+          </Checkbox>
+          <Checkbox whiteSpace="nowrap">
+            Çıkmış Sınav
+          </Checkbox>
+        </Stack>
+
+      </Grid>
+
+      </Box>
+
       <Accordion allowMultiple>
         {parts.map((part, partIndex) => (
           <AccordionItem>
@@ -401,7 +459,6 @@ const AddCourse = () => {
         ))}
       </Accordion>
       <Button
-        // mt={4}
         me={3}
         w="100%"
         h={"55px"}
@@ -419,8 +476,8 @@ const AddCourse = () => {
         <Button
           me={3}
           onClick={() => {
-            saveToLocalStorage();
             handleSaveDraft();
+            saveToLocalStorage(true);
           }}
           colorScheme="yellow"
         >
@@ -428,8 +485,8 @@ const AddCourse = () => {
         </Button>
         <Button
           onClick={() => {
-            saveToLocalStorage();
             handlePublish();
+            saveToLocalStorage(false);
           }}
           colorScheme="green"
         >

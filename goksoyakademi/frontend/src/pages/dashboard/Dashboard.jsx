@@ -60,6 +60,27 @@ const Dashboard = () => {
       }
     }, []);
 
+    const handleRemoveCourse = (courseId) => {
+      onOpen(
+        "delete",
+        "Bu kursu silmek istediğinizden emin misiniz?",
+        () => {
+          // Remove course from localStorage
+          const currentData = localStorage.getItem("courses");
+          if (currentData) {
+            const courses = JSON.parse(currentData);
+            const updatedCourses = courses.filter(course => course.id !== courseId);
+            localStorage.setItem("courses", JSON.stringify(updatedCourses));
+    
+            // Update the state
+            setCourses(updatedCourses);
+          }
+        }
+      );
+    };
+    
+
+
     return (
       <>
         <Heading fontSize="xl" w="100%" mb={3}>
@@ -84,7 +105,7 @@ const Dashboard = () => {
               key={course.id}
               borderWidth="1px"
               borderRadius="lg"
-              overflow="hidden"
+              // overflow="hidden"
               p={4}
               transition="0.3s"
               _hover={{
@@ -103,17 +124,8 @@ const Dashboard = () => {
                 {course.parts.length}{" "}
                 {course.parts.length === 1 ? "ÜNİTE" : "ÜNİTE"}
               </Badge>
-              {/* <IconButton
-                pos={"absolute"}
-                right={"10px"}
-                top={"10px"}
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-                aria-label="Settings"
-                icon={<SettingsIcon />}
-              /> */}
-              <Menu>
+
+              <Menu placement="left-start">
                 <MenuButton
                   as={IconButton}
                   pos={"absolute"}
@@ -125,12 +137,15 @@ const Dashboard = () => {
                   aria-label="Settings"
                   icon={<SettingsIcon />}
                 />
-                <MenuList>
-                  <MenuItem onClick={() => handleEditCourse(course.id)}>
-                    Edit Course
+                <MenuList >
+                  <MenuItem  onClick={() => {return;}}>
+                    Kursu Düzenle
                   </MenuItem>
-                  <MenuItem onClick={() => handleRemoveCourse(course.id)}>
-                    Remove Course
+                  <MenuItem onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemoveCourse(course.id)
+                  }} >
+                    Kursu Sil
                   </MenuItem>
                 </MenuList>
               </Menu>
@@ -284,12 +299,12 @@ const Dashboard = () => {
               <BsPlusSquare size={28} color="white" />
               &nbsp;&nbsp;Kurs Ekle
             </NavLink>
-            <NavLink dashId="dash3">
+            {/* <NavLink dashId="dash3">
               <Flex align="center">
                 <BsAsterisk size={28} color="white" />
                 &nbsp;&nbsp;Yönetim
               </Flex>
-            </NavLink>
+            </NavLink> */}
             <NavLink dashId="dash4">
               <Flex align="center">
                 <BsUpload size={28} color="white" />

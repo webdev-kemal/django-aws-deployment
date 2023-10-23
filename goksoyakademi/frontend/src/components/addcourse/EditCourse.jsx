@@ -97,24 +97,26 @@ const EditCourse = () => {
   //   loadCourses();
   // };
 
-  const saveToLocalStorage = () => {
-    const courseData = { id, courseName, desc, prc, parts };
+  const saveToLocalStorage = (draftStatus) => {
+    const courseData = { id, courseName, desc, prc, parts, isDraft: draftStatus };
     const currentData = localStorage.getItem("courses");
     const courses = currentData ? JSON.parse(currentData) : [];
-    const courseId = Number(id);
-    const courseIndex = courses.findIndex((course) => course.id === courseId);
+    
+    // Find the index of the course with the given id
+    const courseIndex = courses.findIndex(course => course.id === id);
 
     if (courseIndex !== -1) {
-      // Update the existing course data
-      courses[courseIndex] = courseData;
+        // If the course exists, update its data
+        courses[courseIndex] = courseData;
     } else {
-      // Append new course data to the array
-      courses.push(courseData);
+        // If the course doesn't exist, append the new course data to the list
+        courses.push(courseData);
     }
 
+    // Save the updated list of courses back to local storage
     localStorage.setItem("courses", JSON.stringify(courses));
-    // loadCourses(); (if you have such a function)
-  };
+};
+
 
   const toast = useToast();
   const { onOpen } = useAlertContext();
@@ -159,6 +161,7 @@ const EditCourse = () => {
   };
 
   const handlePublish = () => {
+    setIsDraft(false)
     toast({
       title: "Kurs yayınlandı.",
       description: "Kurslarım sekmesinde görebilirsiniz!",
@@ -167,8 +170,9 @@ const EditCourse = () => {
       isClosable: true,
     });
   };
-
+  
   const handleSaveDraft = () => {
+    setIsDraft(true)
     toast({
       title: "Kurs taslak olarak kaydedildi.",
       description: "Kurslarım sekmesinden yayınlayabilirsiniz!",
@@ -210,8 +214,8 @@ const EditCourse = () => {
         <Button
           me={3}
           onClick={() => {
-            saveToLocalStorage();
             handleSaveDraft();
+            saveToLocalStorage(true);
           }}
           colorScheme="yellow"
         >
@@ -219,8 +223,8 @@ const EditCourse = () => {
         </Button>
         <Button
           onClick={() => {
-            saveToLocalStorage();
             handlePublish();
+            saveToLocalStorage(false);
           }}
           colorScheme="green"
         >
@@ -374,8 +378,8 @@ const EditCourse = () => {
         <Button
           me={3}
           onClick={() => {
-            saveToLocalStorage();
             handleSaveDraft();
+            saveToLocalStorage(true);
           }}
           colorScheme="yellow"
         >
@@ -383,8 +387,8 @@ const EditCourse = () => {
         </Button>
         <Button
           onClick={() => {
-            saveToLocalStorage();
             handlePublish();
+            saveToLocalStorage(false);
           }}
           colorScheme="green"
         >
