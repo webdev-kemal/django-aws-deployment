@@ -210,28 +210,30 @@ const EditCourse = () => {
 
   return (
     <Box>
-      <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md">
-        <Button
-          me={3}
-          onClick={() => {
-            handleSaveDraft();
-            saveToLocalStorage(true);
-          }}
-          colorScheme="yellow"
-        >
-          Taslağı Kaydet
-        </Button>
-        <Button
-          onClick={() => {
-            handlePublish();
-            saveToLocalStorage(false);
-          }}
-          colorScheme="green"
-        >
-          Kursu Yayınla
-        </Button>
-        {isDraft ? <Text>Kurs taslak modda.</Text> : <Text>Kurs yayında.</Text>}
-      </Box>
+      <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md" display="flex" alignItems="center">
+    <Button
+      me={3}
+      onClick={() => {
+        handleSaveDraft();
+        saveToLocalStorage(true);
+      }}
+      colorScheme="yellow"
+    >
+      Taslağı Kaydet
+    </Button>
+    <Button
+      me={3}
+      onClick={() => {
+        handlePublish();
+        saveToLocalStorage(false);
+      }}
+      colorScheme="green"
+    >
+      Kursu Yayınla
+    </Button>
+    {isDraft ? <Text color={"orange"} fontWeight={"bold"}>Kurs taslak modda.</Text> : <Text fontWeight={"bold"} color={"green"}>Kurs yayında.</Text>}
+</Box>
+
       <Accordion allowMultiple>
         {parts.map((part, partIndex) => (
           <AccordionItem>
