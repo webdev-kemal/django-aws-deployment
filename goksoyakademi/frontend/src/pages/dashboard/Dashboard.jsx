@@ -65,19 +65,18 @@ const Dashboard = () => {
         "delete",
         "Bu kursu silmek istediğinizden emin misiniz?",
         () => {
-          // Remove course from localStorage
-          const currentData = localStorage.getItem("courses");
-          if (currentData) {
-            const courses = JSON.parse(currentData);
-            const updatedCourses = courses.filter(course => course.id !== courseId);
-            localStorage.setItem("courses", JSON.stringify(updatedCourses));
+          // Filter out the course with the given ID
+          const updatedCourses = courses.filter(course => course.id !== courseId);
+          
+          // Update the localStorage
+          localStorage.setItem("courses", JSON.stringify(updatedCourses));
     
-            // Update the state
-            setCourses(updatedCourses);
-          }
+          // Update the state directly with the filtered list
+          setCourses(updatedCourses);
         }
       );
     };
+    
     
 
 
@@ -105,7 +104,7 @@ const Dashboard = () => {
               key={course.id}
               borderWidth="1px"
               borderRadius="lg"
-              // overflow="hidden"
+              overflow="hidden"
               p={4}
               transition="0.3s"
               _hover={{
@@ -117,6 +116,7 @@ const Dashboard = () => {
                 navigate(`${course.id}`);
               }}
               pos={"relative"}
+              h={"160px"}
             >
               <Heading fontSize="xl">{course.courseName}</Heading>
               <Text mt={2}>{course.desc}</Text>
@@ -170,24 +170,48 @@ const Dashboard = () => {
                   Yayında!
                 </Text>
               )}
+                <Text
+                  pos={"absolute"}
+                  left={"10px"}
+                  bottom={"0px"}
+                
+                  fontSize="sm" color="gray.500" mt={2}
+                >
+            
+        Son güncelleme: {new Date(course.lastUpdated).toLocaleDateString()} {new Date(course.lastUpdated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+     
+                </Text>
             </Box>
           ))}
-          <Button
-            variation="outline"
-            onClick={() => {
-              setActiveDash("dash2");
-            }}
-          >
-            Kurs Oluştur
-          </Button>
-          <Button
+
+<Box  
+  borderWidth="1px"
+  borderRadius="lg"
+  p={4}
+  transition="0.3s"
+  _hover={{
+    cursor: "pointer",
+    transform: "scale(1.03)",
+    transition: "0.3s",
+  }}
+  onClick={() => {
+    setActiveDash("dash2");
+  }}
+  pos={"relative"}
+  h={"160px"}
+>
+  <Heading fontSize="xl"  pos={"absolute"} top="50%" left="50%" transform={"translate(-50%, -50%)"}>Yeni Kurs Oluştur</Heading>
+</Box>
+
+         
+          {/* <Button
             variation="outline"
             onClick={() => {
               localStorage.removeItem("courses");
             }}
           >
             Delete Courses
-          </Button>
+          </Button> */} 
         </Grid>
       </>
     );

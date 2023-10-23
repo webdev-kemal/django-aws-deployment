@@ -96,7 +96,7 @@ const AddCourse = () => {
   //will convert to axios put
   const saveToLocalStorage = (draftStatus) => {
     if (isDraft===null)
-    {const courseData = { id, courseName, desc, prc, parts, isDraft: draftStatus };
+    {const courseData = { id, courseName, desc, prc, parts, isDraft: draftStatus, lastUpdated: new Date().toISOString() };
     // Get current courses data from localStorage
     const currentData = localStorage.getItem("courses");
     // Parse current data, or use an empty array if there's no data
@@ -132,6 +132,7 @@ const AddCourse = () => {
   // handle part title operations
 
   const handleTitleChange = (partIndex, newName) => {
+
     const newParts = [...parts];
     newParts[partIndex].name = newName;
     setParts(newParts);
@@ -154,6 +155,17 @@ const AddCourse = () => {
   //handle course name operations
 
   const handleCourseNameChange = (newName) => {
+    if(newName.length > 20){
+      toast({
+        title: "Bu başlık çok uzun.",
+        description: `Kurs başlığı değiştirilemedi.`,
+        status: "error",
+        duration: 2500,
+        isClosable: true,
+      });
+      setEditingCourseName(courseName)
+      return;
+    }
     if(newName !== "")
     {
     setCourseName(newName);
@@ -176,6 +188,17 @@ const AddCourse = () => {
   //handle description operations
 
   const handleDescriptionChange = ( newName) => {
+    if(newName.length > 40){
+      toast({
+        title: "Bu açıklama çok uzun.",
+        description: `Kurs açıklaması değiştirilemedi.`,
+        status: "error",
+        duration: 2500,
+        isClosable: true,
+      });
+      setEditingDescription(desc)
+      return;
+    }
     if(newName !== "")
     {
       setDesc(newName);
@@ -267,7 +290,7 @@ const AddCourse = () => {
         </Button>
       </Box>
       <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md">
-        <Text fontWeight={"bold"} fontSize={"xl"}>Genel Bilgiler</Text >
+        <Text fontWeight={"bold"} fontSize={"xl"}>Kurs Bilgisi</Text >
       <Grid templateColumns='2fr 5fr' gap={6}>
           
           <Text>Kurs Başlığı</Text>
