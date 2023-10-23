@@ -230,6 +230,7 @@ const EditCourse = () => {
         >
           Kursu Yayınla
         </Button>
+        {isDraft ? <Text>Kurs taslak modda.</Text> : <Text>Kurs yayında.</Text>}
       </Box>
       <Accordion allowMultiple>
         {parts.map((part, partIndex) => (
