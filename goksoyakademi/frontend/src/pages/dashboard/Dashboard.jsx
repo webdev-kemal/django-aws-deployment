@@ -230,7 +230,7 @@ const Dashboard = () => {
   const renderDash = () => {
     switch (activeDash) {
       case "dash1":
-        return <Box>{id ? <EditCourse /> : <MyCourses />}</Box>;
+        return <Box>{id ? <EditCourse switchDash={()=>{setActiveDash("dash1")}}/> : <MyCourses />}</Box>;
       case "dash2":
         return (
           <Box>

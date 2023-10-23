@@ -17,6 +17,7 @@ import {
   InputGroup,
   InputLeftElement,
   Accordion,
+  Spacer,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
@@ -26,7 +27,7 @@ import { useToast } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useAlertContext } from "../../context/AlertContext";
 import { EditIcon, CheckIcon } from "@chakra-ui/icons";
-import { useParams } from "react-router-dom";
+import { useParams , useNavigate} from "react-router-dom";
 
 const initialVideo = { title: "", videoFile: "" };
 
@@ -35,13 +36,14 @@ const initialPart = () => {
   return { name: "Yeni Bölüm", videos: [{ ...initialVideo }] };
 };
 
-const EditCourse = () => {
+const EditCourse = ( {switchDash} ) => {
   const inputRefs = useRef([]);
   const [isEditingPartName, setIsEditingPartName] = useState(null);
   const [editingPartName, setEditingPartName] = useState("");
   const [isDraft, setIsDraft] = useState(true);
 
   const { id } = useParams();
+  const navigate = useNavigate()
   //bu ID'ye göre datayı yükleyecek, ve buradaki save functionu id'yi eşleyip sadece bu kursu değiştirecek yeni kurs eklemeyecek.
   //add course kısmına girdiğimizde local storage'dan draftcourse verisini çekecek, sadece bir tane kurs olacak orada
 
@@ -231,7 +233,16 @@ const EditCourse = () => {
     >
       Kursu Yayınla
     </Button>
-    {isDraft ? <Text color={"orange"} fontWeight={"bold"}>Kurs taslak modda.</Text> : <Text fontWeight={"bold"} color={"green"}>Kurs yayında.</Text>}
+    {isDraft ? <Text  fontWeight={"bold"}>[!] Kurs taslak modda.</Text> : <Text fontWeight={"bold"} >[!] Kurs yayında.</Text>}
+    <Spacer />
+    <Text as="u" onClick={()=>{onOpen(
+              "continue",
+              "Kaydedilmemiş değişiklikler olabilir, yine de çıkılsın mı?",
+              () => {
+                switchDash()
+                navigate("/protected");
+              }
+            );}}>Kurslarıma geri dön --{">"}</Text>
 </Box>
 
       <Accordion allowMultiple>
