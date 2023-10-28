@@ -59,6 +59,7 @@ def updateUserProfile(request):
 
     data = request.data
     user.first_name=data['name']
+    user.last_name = data['surname']  
     # user.username=data['email']
     # user.email=data['email']
 
@@ -67,7 +68,6 @@ def updateUserProfile(request):
     user.save()
 
     return Response(serializer.data)
-
 
 @api_view(['GET'])
 @permission_classes([IsAdminUser])

@@ -10,6 +10,8 @@ import {
   Heading,
   Flex,
   useMediaQuery,
+  Stack,
+  Checkbox,
   IconButton,
   Input,
   FormControl,
@@ -17,6 +19,7 @@ import {
   InputGroup,
   InputLeftElement,
   Accordion,
+  Select,
   Spacer,
   AccordionItem,
   AccordionButton,
@@ -27,7 +30,7 @@ import { useToast } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useAlertContext } from "../../context/AlertContext";
 import { EditIcon, CheckIcon } from "@chakra-ui/icons";
-import { useParams , useNavigate} from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const initialVideo = { title: "", videoFile: "" };
 
@@ -36,14 +39,14 @@ const initialPart = () => {
   return { name: "Yeni Bölüm", videos: [{ ...initialVideo }] };
 };
 
-const EditCourse = ( {switchDash} ) => {
+const EditCourse = ({ switchDash }) => {
   const inputRefs = useRef([]);
   const [isEditingPartName, setIsEditingPartName] = useState(null);
   const [editingPartName, setEditingPartName] = useState("");
   const [isDraft, setIsDraft] = useState(true);
 
   const { id } = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   //bu ID'ye göre datayı yükleyecek, ve buradaki save functionu id'yi eşleyip sadece bu kursu değiştirecek yeni kurs eklemeyecek.
   //add course kısmına girdiğimizde local storage'dan draftcourse verisini çekecek, sadece bir tane kurs olacak orada
 
@@ -66,6 +69,7 @@ const EditCourse = ( {switchDash} ) => {
         setPrice(course.prc);
         setParts(course.parts);
         setIsDraft(course.isDraft);
+        // setTags(course.tags);
         // Assuming tags are part of the course data
         setTags(course.tags || []);
       }
@@ -75,6 +79,16 @@ const EditCourse = ( {switchDash} ) => {
   useEffect(() => {
     loadCourse();
   }, [id]);
+
+  const handleCheckboxChange = (value) => {
+    setTags((prev) => {
+      if (prev.includes(value)) {
+        return prev.filter((item) => item !== value);
+      } else {
+        return [...prev, value];
+      }
+    });
+  };
 
   const toggleEditPartName = (partIndex) => {
     if (isEditingPartName === partIndex) {
@@ -100,25 +114,33 @@ const EditCourse = ( {switchDash} ) => {
   // };
 
   const saveToLocalStorage = (draftStatus) => {
-    const courseData = { id, courseName, desc, prc, parts, isDraft: draftStatus };
+    const courseData = {
+      id,
+      courseName,
+      tags,
+      desc,
+      prc,
+      parts,
+      isDraft: draftStatus,
+      lastUpdated: new Date().toISOString(),
+    };
     const currentData = localStorage.getItem("courses");
     const courses = currentData ? JSON.parse(currentData) : [];
-    
+
     // Find the index of the course with the given id
-    const courseIndex = courses.findIndex(course => course.id === id);
+    const courseIndex = courses.findIndex((course) => course.id === id);
 
     if (courseIndex !== -1) {
-        // If the course exists, update its data
-        courses[courseIndex] = courseData;
+      // If the course exists, update its data
+      courses[courseIndex] = courseData;
     } else {
-        // If the course doesn't exist, append the new course data to the list
-        courses.push(courseData);
+      // If the course doesn't exist, append the new course data to the list
+      courses.push(courseData);
     }
 
     // Save the updated list of courses back to local storage
     localStorage.setItem("courses", JSON.stringify(courses));
-};
-
+  };
 
   const toast = useToast();
   const { onOpen } = useAlertContext();
@@ -126,9 +148,12 @@ const EditCourse = ( {switchDash} ) => {
   const [courseName, setCourseName] = useState("Benim kursum");
   const [desc, setDesc] = useState("Kurs açıklamasını lütfen buraya yazın");
   const [prc, setPrice] = useState(300);
-  const [tags, setTags] = useState(["sinav", "ingilizce", "ceviri"]);
+  const [tags, setTags] = useState([]);
   //   const [parts, setParts] = useState([initialPart]);
   const [parts, setParts] = useState([initialPart()]);
+  const [editingCourseName, setEditingCourseName] = useState("");
+
+  const [editingDescription, setEditingDescription] = useState("");
 
   const addPart = () => {
     // setParts([...parts, initialPart]);
@@ -163,7 +188,7 @@ const EditCourse = ( {switchDash} ) => {
   };
 
   const handlePublish = () => {
-    setIsDraft(false)
+    setIsDraft(false);
     toast({
       title: "Kurs yayınlandı.",
       description: "Kurslarım sekmesinde görebilirsiniz!",
@@ -172,9 +197,9 @@ const EditCourse = ( {switchDash} ) => {
       isClosable: true,
     });
   };
-  
+
   const handleSaveDraft = () => {
-    setIsDraft(true)
+    setIsDraft(true);
     toast({
       title: "Kurs taslak olarak kaydedildi.",
       description: "Kurslarım sekmesinden yayınlayabilirsiniz!",
@@ -212,38 +237,140 @@ const EditCourse = ( {switchDash} ) => {
 
   return (
     <Box>
-      <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md" display="flex" alignItems="center">
-    <Button
-      me={3}
-      onClick={() => {
-        handleSaveDraft();
-        saveToLocalStorage(true);
-      }}
-      colorScheme="yellow"
-    >
-      Taslağı Kaydet
-    </Button>
-    <Button
-      me={3}
-      onClick={() => {
-        handlePublish();
-        saveToLocalStorage(false);
-      }}
-      colorScheme="green"
-    >
-      Kursu Yayınla
-    </Button>
-    {isDraft ? <Text  fontWeight={"bold"}>[!] Kurs taslak modda.</Text> : <Text fontWeight={"bold"} >[!] Kurs yayında.</Text>}
-    <Spacer />
-    <Text as="u" onClick={()=>{onOpen(
+      <Box
+        mb={4}
+        p={4}
+        border="1px"
+        borderColor="gray.200"
+        borderRadius="md"
+        display="flex"
+        alignItems="center"
+      >
+        <Button
+          me={3}
+          onClick={() => {
+            handleSaveDraft();
+            saveToLocalStorage(true);
+          }}
+          colorScheme="yellow"
+        >
+          Taslağı Kaydet
+        </Button>
+        <Button
+          me={3}
+          onClick={() => {
+            handlePublish();
+            saveToLocalStorage(false);
+          }}
+          colorScheme="green"
+        >
+          Kursu Yayınla
+        </Button>
+        {isDraft ? (
+          <Text fontWeight={"bold"}>[!] Kurs taslak modda.</Text>
+        ) : (
+          <Text fontWeight={"bold"}>[!] Kurs yayında.</Text>
+        )}
+        <Spacer />
+        <Text
+          as="u"
+          onClick={() => {
+            onOpen(
               "continue",
               "Kaydedilmemiş değişiklikler olabilir, yine de çıkılsın mı?",
               () => {
-                switchDash()
+                switchDash();
                 navigate("/protected");
               }
-            );}}>Kurslarıma geri dön --{">"}</Text>
-</Box>
+            );
+          }}
+          _hover={{ cursor: "pointer" }}
+        >
+          Kurslarıma geri dön --{">"}
+        </Text>
+      </Box>
+
+      <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md">
+        <Text fontWeight={"bold"} fontSize={"xl"}>
+          Kurs Bilgisi
+        </Text>
+        <Grid templateColumns="2fr 5fr" gap={6}>
+          <Text>Kurs Başlığı</Text>
+          <Text>Kurs Açıklaması</Text>
+        </Grid>
+        <Grid templateColumns="2fr 5fr" gap={6}>
+          <Input
+            value={editingCourseName}
+            placeholder={courseName}
+            onBlur={(e) => handleCourseNameSave(e)}
+            onKeyPress={(e) => handleCourseNameSave(e)}
+            onChange={(e) => setEditingCourseName(e.target.value)}
+            size="md"
+            p={2}
+          />
+          <Input
+            value={editingDescription}
+            placeholder={desc}
+            onBlur={(e) => handleDescriptionSave(e)}
+            onKeyPress={(e) => handleDescriptionSave(e)}
+            onChange={(e) => setEditingDescription(e.target.value)}
+            size="md"
+            p={2}
+          />
+        </Grid>
+        <Grid templateColumns="2fr 4fr" gap={6} mt={2}>
+          <Select
+            placeholder="Kurs Ücreti"
+            onChange={(e) => setPrice(Number(e.target.value))}
+            value={prc}
+          >
+            <option value="250">250 TL</option>
+            <option value="350">350 TL</option>
+            <option value="450">450 TL</option>
+            <option value="550">550 TL</option>
+            <option value="650">650 TL</option>
+            <option value="750">750 TL</option>
+            <option value="850">850 TL</option>
+          </Select>
+          <Stack spacing={3} direction="row">
+            <Checkbox
+              isChecked={tags.includes("Deneme Çözümü")}
+              onChange={() => handleCheckboxChange("Deneme Çözümü")}
+              whiteSpace="nowrap"
+            >
+              Deneme Çözümü
+            </Checkbox>
+            <Checkbox
+              isChecked={tags.includes("Sınava Hazırlık")}
+              onChange={() => handleCheckboxChange("Sınava Hazırlık")}
+              whiteSpace="nowrap"
+            >
+              Sınava Hazırlık
+            </Checkbox>
+            <Checkbox
+              isChecked={tags.includes("Konu Anlatımı")}
+              onChange={() => handleCheckboxChange("Konu Anlatımı")}
+              whiteSpace="nowrap"
+            >
+              Konu Anlatımı
+            </Checkbox>
+            <Checkbox
+              isChecked={tags.includes("Çeviri Odaklı")}
+              onChange={() => handleCheckboxChange("Çeviri Odaklı")}
+              whiteSpace="nowrap"
+            >
+              Çeviri Odaklı
+            </Checkbox>
+            <Checkbox
+              isChecked={tags.includes("Çıkmış Sınav")}
+              onChange={() => handleCheckboxChange("Çıkmış Sınav")}
+              whiteSpace="nowrap"
+            >
+              Çıkmış Sınav
+            </Checkbox>
+          </Stack>
+        </Grid>
+      </Box>
 
       <Accordion allowMultiple>
         {parts.map((part, partIndex) => (

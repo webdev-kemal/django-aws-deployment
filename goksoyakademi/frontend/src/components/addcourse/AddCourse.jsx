@@ -50,7 +50,8 @@ const AddCourse = () => {
   const [prc, setPrice] = useState(300);
   const [isDraft, setIsDraft] = useState(null);
   const [id, setID] = useState(null);
-  const [tags, setTags] = useState(["sinav", "ingilizce", "ceviri"]);
+  const [tags, setTags] = useState([]);
+
   //   const [parts, setParts] = useState([initialPart]);
   const [parts, setParts] = useState([initialPart()]);
   const toast = useToast();
@@ -77,6 +78,16 @@ const AddCourse = () => {
     automateID();
   }, []);
 
+  const handleCheckboxChange = (value) => {
+    setTags((prev) => {
+      if (prev.includes(value)) {
+        return prev.filter((item) => item !== value);
+      } else {
+        return [...prev, value];
+      }
+    });
+  };
+
   const toggleEditPartName = (partIndex) => {
     if (isEditingPartName === partIndex) {
       setIsEditingPartName(null);
@@ -95,21 +106,28 @@ const AddCourse = () => {
 
   //will convert to axios put
   const saveToLocalStorage = (draftStatus) => {
-    if (isDraft===null)
-    {const courseData = { id, courseName, desc, prc, parts, isDraft: draftStatus, lastUpdated: new Date().toISOString() };
-    // Get current courses data from localStorage
-    const currentData = localStorage.getItem("courses");
-    // Parse current data, or use an empty array if there's no data
-    const courses = currentData ? JSON.parse(currentData) : [];
-    // Append new course data to the array
-    courses.push(courseData);
-    // Save updated courses data back to localStorage
-    localStorage.setItem("courses", JSON.stringify(courses));
-
-  }
-  else{
-    return;
-  }
+    if (isDraft === null) {
+      const courseData = {
+        id,
+        courseName,
+        desc,
+        prc,
+        parts,
+        tags: tags,
+        isDraft: draftStatus,
+        lastUpdated: new Date().toISOString(),
+      };
+      // Get current courses data from localStorage
+      const currentData = localStorage.getItem("courses");
+      // Parse current data, or use an empty array if there's no data
+      const courses = currentData ? JSON.parse(currentData) : [];
+      // Append new course data to the array
+      courses.push(courseData);
+      // Save updated courses data back to localStorage
+      localStorage.setItem("courses", JSON.stringify(courses));
+    } else {
+      return;
+    }
   };
 
   const addPart = () => {
@@ -132,7 +150,6 @@ const AddCourse = () => {
   // handle part title operations
 
   const handleTitleChange = (partIndex, newName) => {
-
     const newParts = [...parts];
     newParts[partIndex].name = newName;
     setParts(newParts);
@@ -155,7 +172,7 @@ const AddCourse = () => {
   //handle course name operations
 
   const handleCourseNameChange = (newName) => {
-    if(newName.length > 20){
+    if (newName.length > 20) {
       toast({
         title: "Bu başlık çok uzun.",
         description: `Kurs başlığı değiştirilemedi.`,
@@ -163,20 +180,19 @@ const AddCourse = () => {
         duration: 2500,
         isClosable: true,
       });
-      setEditingCourseName(courseName)
+      setEditingCourseName(courseName);
       return;
     }
-    if(newName !== "")
-    {
-    setCourseName(newName);
-    toast({
-      title: "Kurs başlığı kaydedildi!",
-      description: `Kurs adı "${newName}" olarak güncellendi.`,
-      status: "info",
-      duration: 2500,
-      isClosable: true,
-    });
-  }
+    if (newName !== "") {
+      setCourseName(newName);
+      toast({
+        title: "Kurs başlığı kaydedildi!",
+        description: `Kurs adı "${newName}" olarak güncellendi.`,
+        status: "info",
+        duration: 2500,
+        isClosable: true,
+      });
+    }
   };
 
   const handleCourseNameSave = (e) => {
@@ -187,8 +203,8 @@ const AddCourse = () => {
 
   //handle description operations
 
-  const handleDescriptionChange = ( newName) => {
-    if(newName.length > 40){
+  const handleDescriptionChange = (newName) => {
+    if (newName.length > 40) {
       toast({
         title: "Bu açıklama çok uzun.",
         description: `Kurs açıklaması değiştirilemedi.`,
@@ -196,23 +212,22 @@ const AddCourse = () => {
         duration: 2500,
         isClosable: true,
       });
-      setEditingDescription(desc)
+      setEditingDescription(desc);
       return;
     }
-    if(newName !== "")
-    {
+    if (newName !== "") {
       setDesc(newName);
-    toast({
-      title: "Kurs açıklaması kaydedildi!",
-      description: `Açıklama "${newName}" olarak güncellendi.`,
-      status: "info",
-      duration: 2500,
-      isClosable: true,
-    });
-  }
+      toast({
+        title: "Kurs açıklaması kaydedildi!",
+        description: `Açıklama "${newName}" olarak güncellendi.`,
+        status: "info",
+        duration: 2500,
+        isClosable: true,
+      });
+    }
   };
 
-  const handleDescriptionSave = ( e) => {
+  const handleDescriptionSave = (e) => {
     if (e.key === "Enter" || e.type === "blur") {
       handleDescriptionChange(editingDescription);
     }
@@ -268,7 +283,7 @@ const AddCourse = () => {
 
   return (
     <Box>
-            <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md">
+      <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md">
         <Button
           me={3}
           onClick={() => {
@@ -280,7 +295,7 @@ const AddCourse = () => {
           Taslağı Kaydet
         </Button>
         <Button
-          onClick={() => {  
+          onClick={() => {
             handlePublish();
             saveToLocalStorage(false);
           }}
@@ -290,15 +305,16 @@ const AddCourse = () => {
         </Button>
       </Box>
       <Box mb={4} p={4} border="1px" borderColor="gray.200" borderRadius="md">
-        <Text fontWeight={"bold"} fontSize={"xl"}>Kurs Bilgisi</Text >
-      <Grid templateColumns='2fr 5fr' gap={6}>
-          
+        <Text fontWeight={"bold"} fontSize={"xl"}>
+          Kurs Bilgisi
+        </Text>
+        <Grid templateColumns="2fr 5fr" gap={6}>
           <Text>Kurs Başlığı</Text>
           <Text>Kurs Açıklaması</Text>
         </Grid>
-      <Grid templateColumns='2fr 5fr' gap={6}>
+        <Grid templateColumns="2fr 5fr" gap={6}>
           <Input
-            value={editingCourseName} 
+            value={editingCourseName}
             placeholder={courseName}
             onBlur={(e) => handleCourseNameSave(e)}
             onKeyPress={(e) => handleCourseNameSave(e)}
@@ -306,46 +322,62 @@ const AddCourse = () => {
             size="md"
             p={2}
           />
-        <Input
-          value={editingDescription}
-          placeholder={desc}
-          onBlur={(e) => handleDescriptionSave(e)}
-          onKeyPress={(e) => handleDescriptionSave(e)}
-          onChange={(e) => setEditingDescription(e.target.value)}
-          size="md"
-          p={2}
-        />
-      </Grid>
-      <Grid templateColumns='2fr 4fr' gap={6} mt={2}>
-        <Select placeholder='Kurs Ücreti'>
-          <option value='250'>250 TL</option>
-          <option value='350'>350 TL</option>
-          <option value='450'>450 TL</option>
-          <option value='550'>550 TL</option>
-          <option value='650'>650 TL</option>
-          <option value='750'>750 TL</option>
-          <option value='850'>850 TL</option>
-        </Select>
-        <Stack spacing={3} direction='row'>
-          <Checkbox whiteSpace="nowrap">
-            Deneme Çözümü
-          </Checkbox >
-          <Checkbox  whiteSpace="nowrap">
-            Sınava Hazırlık
-          </Checkbox>
-          <Checkbox whiteSpace="nowrap">
-            Konu Anlatımı
-          </Checkbox>
-          <Checkbox whiteSpace="nowrap">
-            Çeviri Odaklı
-          </Checkbox>
-          <Checkbox whiteSpace="nowrap">
-            Çıkmış Sınav
-          </Checkbox>
-        </Stack>
-
-      </Grid>
-
+          <Input
+            value={editingDescription}
+            placeholder={desc}
+            onBlur={(e) => handleDescriptionSave(e)}
+            onKeyPress={(e) => handleDescriptionSave(e)}
+            onChange={(e) => setEditingDescription(e.target.value)}
+            size="md"
+            p={2}
+          />
+        </Grid>
+        <Grid templateColumns="2fr 4fr" gap={6} mt={2}>
+          <Select
+            placeholder="Kurs Ücreti"
+            onChange={(e) => setPrice(Number(e.target.value))}
+          >
+            <option value="250">250 TL</option>
+            <option value="350">350 TL</option>
+            <option value="450">450 TL</option>
+            <option value="550">550 TL</option>
+            <option value="650">650 TL</option>
+            <option value="750">750 TL</option>
+            <option value="850">850 TL</option>
+          </Select>
+          <Stack spacing={3} direction="row">
+            <Checkbox
+              onChange={() => handleCheckboxChange("Deneme Çözümü")}
+              whiteSpace="nowrap"
+            >
+              Deneme Çözümü
+            </Checkbox>
+            <Checkbox
+              onChange={() => handleCheckboxChange("Sınava Hazırlık")}
+              whiteSpace="nowrap"
+            >
+              Sınava Hazırlık
+            </Checkbox>
+            <Checkbox
+              onChange={() => handleCheckboxChange("Konu Anlatımı")}
+              whiteSpace="nowrap"
+            >
+              Konu Anlatımı
+            </Checkbox>
+            <Checkbox
+              onChange={() => handleCheckboxChange("Çeviri Odaklı")}
+              whiteSpace="nowrap"
+            >
+              Çeviri Odaklı
+            </Checkbox>
+            <Checkbox
+              onChange={() => handleCheckboxChange("Çıkmış Sınav")}
+              whiteSpace="nowrap"
+            >
+              Çıkmış Sınav
+            </Checkbox>
+          </Stack>
+        </Grid>
       </Box>
 
       <Accordion allowMultiple>

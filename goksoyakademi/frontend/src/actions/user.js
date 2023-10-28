@@ -13,7 +13,6 @@ import {
   USER_UPDATE_FAIL,
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
-  USER_UPDATE_RESET,
 } from "../store/constants";
 import axios from "axios";
 
@@ -114,15 +113,15 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
     const user = getState().userDetails;
 
     const config = {
-      Headers: {
+      headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
     const { data } = await axios.get(
       // `http://127.0.0.1:8000/api/user/home/${id}`,
-      `http://127.0.0.1:8000/api/user/profile`,
+      `http://127.0.0.1:8000/api/user/profile/`,
 
       config
     );
@@ -159,7 +158,7 @@ export const updateUser = (user) => async (dispatch, getState) => {
     } = getState();
 
     const config = {
-      Headers: {
+      headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
@@ -167,7 +166,7 @@ export const updateUser = (user) => async (dispatch, getState) => {
 
     const { data } = await axios.put(
       // `http://127.0.0.1:8000/api/user/home/${id}`,
-      `http://127.0.0.1:8000/api/user/profile/update`,
+      `http://127.0.0.1:8000/api/user/profile/update/`,
       user,
       config
     );

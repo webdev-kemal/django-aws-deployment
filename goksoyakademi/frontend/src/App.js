@@ -50,9 +50,9 @@ function App() {
               <Route exact path="/courses" element={<Main />} />
               <Route exact path="/video/:id" element={<VideoPage />} />
               <Route exact path="/course/:id" element={<Course />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/cart/:id?" element={<Cart />} />
               <Route path="/cart/:id" element={<Cart />} />
-              <Route path="/profile" element={<Profile />} />
               <Route path="/protected" element={<ProtectedRoute />}>
                 <Route path="/protected/:id" element={<Dashboard />} />
                 <Route index element={<Dashboard />} />

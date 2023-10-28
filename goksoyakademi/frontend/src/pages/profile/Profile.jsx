@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams, Link } from "react-router-dom";
 import Navbar from "../../components/navbar/Navbar";
 import Container from "../../components/containers/container";
-import { Grid, GridItem, HStack, Image, Spacer } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
+import { logout } from "../../actions/user";
 import {
   Box,
   Text,
@@ -18,12 +19,19 @@ import {
   VStack,
   TabPanels,
   Tabs,
+  Grid,
+  GridItem,
+  HStack,
+  Image,
+  Spacer,
   SimpleGrid,
 } from "@chakra-ui/react";
 import Footer from "../../components/footer/Footer";
 
 const Profile = () => {
+  const [isUpdating, setIsUpdating] = useState(false);
   const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [oldPassword, setOldPass] = useState("");
   const [password, setPass] = useState("");
   const [confirmPass, setPass2] = useState("");
@@ -42,17 +50,22 @@ const Profile = () => {
 
   const [tabIndex, setTabIndex] = useState(0);
 
+  const toast = useToast();
+
   useEffect(() => {
     if (!userInfo) {
       history("/login");
     } else {
-      dispatch({ type: "USER_UPDATE_RESET" });
+      console.log(userInfo);
       dispatch(getUserDetails("profile"));
     }
   }, [dispatch, userInfo]);
 
   const handleName = (e) => {
     setName(e.target.value);
+  };
+  const handleSurname = (e) => {
+    setSurname(e.target.value);
   };
   const handleOldPass = (e) => {
     setOldPass(e.target.value);
@@ -65,13 +78,40 @@ const Profile = () => {
   };
 
   const handleSubmit = (e) => {
-    if (password != confirmPass) {
-      console.log("parolar uyusmuyo");
+    setIsUpdating(true);
+    dispatch(updateUser({ name: name, surname: surname }));
+    if (success) {
+      toast({
+        title: "Güncelleme başarılı",
+        description: `Lütfen tekrar giriş yapın.`,
+        status: "success",
+        duration: 1400,
+        isClosable: true,
+      });
+      setTimeout(() => {
+        dispatch(logout());
+        history("/login");
+      }, 1500);
     } else {
-      // dispatch(updateUser({ id: user._id, name: name, password: password }));
-      dispatch(updateUser({ name: name }));
-      console.log("başardın abisi");
+      toast({
+        title: "Güncelleme başarısız",
+        description: `Lütfen yeniden giriş yapın.`,
+        status: "error",
+        duration: 1400,
+        isClosable: true,
+      });
+      setTimeout(() => {
+        dispatch(logout());
+        history("/login");
+        setIsUpdating(false);
+      }, 1500);
     }
+    // if (password != confirmPass) {
+    //   console.log("parolar uyusmuyo");
+    // } else {
+    //   // dispatch(updateUser({ id: user._id, name: name, password: password }));
+    //   console.log(userInfo.access);
+    // }
   };
 
   return (
@@ -88,9 +128,9 @@ const Profile = () => {
                 onChange={(index) => setTabIndex(index)}
               >
                 <TabList flexDirection="column">
-                  <Tab>Edit Profile</Tab>
-                  <Tab>Privacy & Password</Tab>
-                  <Tab>Other Options</Tab>
+                  <Tab>Hesap Bilgileri</Tab>
+                  <Tab>Şifre Değiştirme</Tab>
+                  <Tab>Tercihlerim</Tab>
                 </TabList>
               </Tabs>
             </Box>
@@ -107,11 +147,28 @@ const Profile = () => {
                     <Input
                       onChange={handleName}
                       mb={3}
-                      placeholder="Yeni İsim Girin"
+                      placeholder={
+                        userInfo.first_name ? userInfo.first_name : "İsim"
+                      }
+                    />
+                    <Input
+                      onChange={handleSurname}
+                      mb={3}
+                      placeholder={
+                        userInfo.last_name ? userInfo.last_name : "Soy isim"
+                      }
                     />
                     <Text mb={0}>E-posta Adresi Değişikliği</Text>
-                    <Input disabled mb={3} placeholder="E-posta Adresi Girin" />
-                    <Button onClick={handleSubmit}>Kaydet</Button>
+                    <Input
+                      disabled
+                      mb={3}
+                      placeholder={
+                        userInfo.email ? userInfo.email : "E-posta Adresi Girin"
+                      }
+                    />
+                    <Button onClick={handleSubmit} disabled={isUpdating}>
+                      Kaydet
+                    </Button>
                   </TabPanel>
                   <TabPanel>
                     <Text mb={0}>Eski Şifreniz</Text>
@@ -142,7 +199,7 @@ const Profile = () => {
                       {" "}
                       <VStack align="start" spacing={3}>
                         <Checkbox defaultIsChecked>
-                          PRO üyelik indirime girdiğinde beni uyar
+                          PLUS üyelik indirime girdiğinde beni uyar
                         </Checkbox>
                         <Checkbox>Gece modunu aktif et</Checkbox>
                       </VStack>

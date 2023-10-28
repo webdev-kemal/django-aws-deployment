@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Switch from "./Switch";
 import "./navbar.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 // import { Link } from "react-router-dom";
 import { useMediaQuery, Text, Button, Flex } from "@chakra-ui/react";
 import {
@@ -20,6 +20,7 @@ const Navbar = () => {
   const [isDesktop] = useMediaQuery("(min-width: 62em)");
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const userLogin = useSelector((state) => state.user);
   const { userInfo } = userLogin;
@@ -30,6 +31,8 @@ const Navbar = () => {
     dispatch(logout());
     navigate("/login");
   };
+
+  useEffect(() => {}, [location.pathname]);
 
   return (
     // <nav class="navbar navbar-expand-lg navbar-dark navbar-bg mt-3 w-75 mx-auto rounded-5">
@@ -163,7 +166,8 @@ const Navbar = () => {
                     <Menu>
                       <MenuButton className="navlink-hover">
                         <div class="nav-link ">
-                          {userInfo.first_name}&ensp;
+                          {userInfo.first_name ? userInfo.first_name : "IDK"}
+                          &ensp;
                           <MdPerson2 />
                         </div>
                       </MenuButton>
