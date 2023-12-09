@@ -32,7 +32,8 @@ import { useAlertContext } from "../../context/AlertContext";
 import { EditIcon, CheckIcon } from "@chakra-ui/icons";
 import { v4 as uuidv4 } from "uuid";
 
-const initialVideo = { title: "", videoFile: "" };
+//define video object
+const initialVideo = { title: "", videoFile: "", isPreview: false };
 
 // const initialPart = { name: "Part 1", videos: [initialVideo] };
 const initialPart = () => {
@@ -104,6 +105,13 @@ const AddCourse = () => {
     setParts(newParts);
   };
 
+  const updateIsPreview = (partIndex, videoIndex, isPreview) => {
+    const newParts = [...parts];
+    newParts[partIndex].videos[videoIndex].isPreview = isPreview;
+    setParts(newParts);
+  };
+
+  //declare course object
   //will convert to axios put
   const saveToLocalStorage = (draftStatus) => {
     if (isDraft === null) {
@@ -458,7 +466,21 @@ const AddCourse = () => {
                         id={`videoTitle-${partIndex}-${videoIndex}`}
                         mr={2}
                       >
-                        <FormLabel>Video Başlığı</FormLabel>
+                        <Flex alignItems="center">
+                          <FormLabel>Video Başlığıı</FormLabel>
+                          <Checkbox
+                            isChecked={video.isPreview}
+                            onChange={(e) =>
+                              updateIsPreview(
+                                partIndex,
+                                videoIndex,
+                                e.target.checked
+                              )
+                            }
+                          >
+                            Önizleme Videosu
+                          </Checkbox>
+                        </Flex>
                         <Input
                           value={video.title}
                           onChange={(e) =>

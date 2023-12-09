@@ -32,7 +32,7 @@ import { useAlertContext } from "../../context/AlertContext";
 import { EditIcon, CheckIcon } from "@chakra-ui/icons";
 import { useParams, useNavigate } from "react-router-dom";
 
-const initialVideo = { title: "", videoFile: "" };
+const initialVideo = { title: "", videoFile: "", isPreview: true };
 
 // const initialPart = { name: "Part 1", videos: [initialVideo] };
 const initialPart = () => {
@@ -103,6 +103,12 @@ const EditCourse = ({ switchDash }) => {
   const updateVideoTitle = (partIndex, videoIndex, newTitle) => {
     const newParts = [...parts];
     newParts[partIndex].videos[videoIndex].title = newTitle;
+    setParts(newParts);
+  };
+
+  const updateIsPreview = (partIndex, videoIndex, isPreview) => {
+    const newParts = [...parts];
+    newParts[partIndex].videos[videoIndex].isPreview = isPreview;
     setParts(newParts);
   };
 
@@ -445,7 +451,22 @@ const EditCourse = ({ switchDash }) => {
                         id={`videoTitle-${partIndex}-${videoIndex}`}
                         mr={2}
                       >
-                        <FormLabel>Video Başlığı</FormLabel>
+                         <Flex alignItems="center">
+                          <FormLabel>Video Başlığı</FormLabel>
+                          <Checkbox
+                            isChecked={video.isPreview}
+                            onChange={(e) =>
+                              updateIsPreview(
+                                partIndex,
+                                videoIndex,
+                                e.target.checked
+                              )
+                            }
+                            whiteSpace="nowrap"
+                          >
+                            Önizleme Videosu
+                          </Checkbox>
+                        </Flex>
                         <Input
                           value={video.title}
                           onChange={(e) =>
